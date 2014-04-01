@@ -1,0 +1,37 @@
+NOTES:
+
+	Limited API assumed from a specific Vendor Login.
+	- ONE Login per Vendor ???
+	- 
+
+API:
+
+	/tags		Manage arbitrary tags against a user
+		Types of tags (e.g. ...
+
+
+	/edit ? 
+	/metadata ? 
+	/vendor ?
+
+
+APPLCATIONS:
+
+	/app		
+		GET		List my apps
+		POST	Create a new app
+	/app/:id
+		GET		Get an entry
+		PUT		Update
+		DEL		Delete
+
+
+	/tour ...
+
+	
+SCHOOL / PRINCIPAL
+
+	/school/app		List apps configured for the school
+		POST	Enable new app - can be existing or local new
+
+
