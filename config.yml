@@ -26,3 +26,16 @@ template: "simple"
 #     start_tag: '[%'
 #     end_tag:   '%]'
 
+
+plugins:
+    Database:
+        driver: 'mysqlPP'
+        host: 'sifau.cspvdo7mmaoe.ap-southeast-2.rds.amazonaws.com'
+        database: 'hits'
+        username: 'sifau'
+        password: '03_SIS_was_not'
+        dbi_params:
+            RaiseError: 1
+            AutoCommit: 1
+        log_queries: 1
+

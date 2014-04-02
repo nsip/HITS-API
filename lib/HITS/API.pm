@@ -5,7 +5,8 @@ use Dancer ':syntax';
 use Dancer::Plugin::REST;
 use Dancer::Plugin::Database;
 
-use HITS::API:::
+use HITS::API::App;
+use HITS::API::Tag;
 
 our $VERSION = '0.1';
 prefix undef;

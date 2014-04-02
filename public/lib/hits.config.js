@@ -1,0 +1,3 @@
+hits_config = {
+	endpoint: '/'
+};

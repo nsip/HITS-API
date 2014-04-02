@@ -1,11 +1,11 @@
-package HITS::API::Tags;
+package HITS::API::Tag;
 use perl5i::2;
 use Dancer ':syntax';
 use Dancer::Plugin::REST;
 use Dancer::Plugin::Database;
 
 our $VERSION = '0.1';
-prefix '/tags';
+prefix '/tag';
 set serializer => 'JSON';
 
 # PURPOSE: Basic tags
