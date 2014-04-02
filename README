@@ -34,4 +34,5 @@ SCHOOL / PRINCIPAL
 	/school/app		List apps configured for the school
 		POST	Enable new app - can be existing or local new
 
+QLD: Levels... 
 
