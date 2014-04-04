@@ -15,6 +15,10 @@ API:
 	/vendor ?
 
 
+VENDOR PROFILE:
+	Name & Logo
+	Address, About Us ?
+
 APPLCATIONS:
 
 	/app		
@@ -25,10 +29,46 @@ APPLCATIONS:
 		PUT		Update
 		DEL		Delete
 
+	    * id                              Automatically generated
+        * name                    Short name - useful in URLs etc. Unique to this Vendor
+        * title                   Title of the application
+        * description             Full description
+        * site_url                Site URL
+        * about                   Optional URL about this application
+        * tags                    Tags, such as category
+        * icon                    Optional URL for the Icon
+        * public                  Yes / No 
+		* APP Permissions - list...
+			* List of SIF Objects or *
+			* Which objects you can READ/WRITE
+			* Which fields you can READ/WRITE in an object
+			* (maybe) Which queries you can execute ???
+
+	PERMISSIONS
+		APP
+
 
 	/tour ...
 
-	
+
+SCHOOL APP:
+	Join from School to App
+		* School ID
+		* Application ID
+		* DateTime
+		* Members = "*" - Static, whole school now
+
+STATS:
+
+	Histagram display
+	Number of times users have hit app
+	/usage
+		* Date/Time
+		* Vendor ID
+		* Action = ???
+		* App ID
+		* Which zone / School (Zone ID)
+
 SCHOOL / PRINCIPAL
 
 	/school/app		List apps configured for the school
