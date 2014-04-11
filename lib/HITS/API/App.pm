@@ -15,10 +15,10 @@ set serializer => 'JSON';
 #		/app - Principal - You get to see a list of all public apps, and all of	yours
 #	V1 - Show all Applications you should see (e.g. Vendor vs Principal)
 get '/' => sub {
-
-	my $vendor_id = 'ABC-123';	# XXX
+	my $vendor_id = 'test1';	# XXX
 
 	my $base = uri_for('/app/'). "";
+	# XXX vendor details ?
 	my $sth = database->prepare(qq{
 		SELECT
 			*
@@ -35,13 +35,24 @@ get '/' => sub {
 
 # Create new APP (brand new, not associate an app with a school)
 post '/' => sub {
+	my $vendor_id = 'test1';	# XXX
 
 	my $sth = database->prepare(q{
 		INSERT INTO
 			app
-			(id, X, Y, Z)
+			(
+				id, vendor_id, name, title, description, 
+				site_url, icon_url, 
+				tags, about, 
+				pub
+			)
 		VALUES
-			(?, ?, ?, ?)
+			(
+				?, ?, ?, ?, ?,
+				?, ?,
+				?, ?,
+				?
+			)
 	});
 
 	my $id = createId;
@@ -57,6 +68,12 @@ post '/' => sub {
 	#	icon			Optional URL for the Icon
 	#	public			Yes / No 
 
+	$sth->execute(
+		$id, $vendor_id, params->{name}, params->{title}, params->{description},
+		params->{site_url}, params->{icon_url}, 
+		params->{tags}, params->{about},
+		params->{pub}
+	);
 
 	database->commit();
 	
@@ -68,14 +85,56 @@ post '/' => sub {
 
 # Get Full Details for ONE App
 get '/:id' => sub {
+	my $vendor_id = 'test1';	# XXX
+	my $sth = database->prepare(qq{
+		SELECT
+			*
+		FROM
+			app
+		WHERE
+			id = ? AND vendor_id = ?
+	});
+	$sth->execute(params->{id}, $vendor_id);
+	return {
+		app => $sth->fetchrow_hashref,
+	};
 };
 
 # Update existing
 put '/:id' => sub {
+	my $vendor_id = 'test1';	# XXX
+	my $data = {};
+	foreach my $key (qw/name title description site_url about tags icon public/) {
+		if (params->{$key}) {
+			$data->{$key} = params->{$key};
+		}
+	}
+	if (scalar (keys %$data)) {
+		my $sth = database->prepare(q{
+			UPDATE app
+			SET } . join(", ", map { "$_ = ?" } sort keys %$data) . q{
+			WHERE id = ? AND vendor_id = ?
+		});
+		$sth->execute(
+			map { $data->{$_} } sort keys %$data,
+			params->{id}, $vendor_id
+		);
+	}
+	database->commit();
+	return {
+		success => 1,
+	};
 };
 
-# Delete existing
+# Delete existing (XXX security?)
 del ':id' => sub {
+	my $vendor_id = 'test1';	# XXX
+	my $sth = database->prepare(q{DELETE FROM app WHERE id = ? AND vendor_id = ?});
+	$sth->execute(params->{id}, $vendor_id);
+	return {
+		success => 1,
+		id => params->{id},
+	};
 };
 
 true;
