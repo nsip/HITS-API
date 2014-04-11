@@ -5,6 +5,12 @@ use Dancer::Plugin::REST;
 use Dancer::Plugin::Database;
 use HITS::API::Plugin;
 
+=head1 NAME
+
+HITS::API::App - Applications list, and update
+
+=cut
+
 our $VERSION = '0.1';
 prefix '/app';
 set serializer => 'JSON';

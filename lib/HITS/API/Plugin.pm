@@ -9,7 +9,7 @@ use Data::Dumper;
 
 =head1 NAME
 
-TODO
+HITS::API::Plugin - Useful plugin / misc utils for HITS
 
 =head1 METHODS
 

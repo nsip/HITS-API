@@ -7,6 +7,8 @@ use Dancer::Plugin::Database;
 
 use HITS::API::App;
 use HITS::API::Tag;
+use HITS::API::Vendor;
+use HITS::API::View;
 
 our $VERSION = '0.1';
 prefix undef;

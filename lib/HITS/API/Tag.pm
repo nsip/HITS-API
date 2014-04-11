@@ -4,6 +4,12 @@ use Dancer ':syntax';
 use Dancer::Plugin::REST;
 use Dancer::Plugin::Database;
 
+=head1 NAME
+
+HITS::API::Tag - Tagging - arbitrary tags for Vendors
+
+=cut
+
 our $VERSION = '0.1';
 prefix '/tag';
 set serializer => 'JSON';

@@ -5,6 +5,12 @@ use Dancer::Plugin::REST;
 use Dancer::Plugin::Database;
 use HITS::API::Plugin;
 
+=head1 NAME
+
+HITS::API::View - View avialable data directly for testing
+
+=cut
+
 our $VERSION = '0.1';
 prefix '/view';
 set serializer => 'JSON';
