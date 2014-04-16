@@ -90,3 +90,9 @@ CREATE NEW VENDOR
 	* Create Vendor matching REMOTE_USER
 	* Create School matching REMOTE_USER
 
+
+JAVASCRIPT?
+
+	* School App
+		- List Applications marked Public (or my own)
+		- POST /school/:id/app app_id

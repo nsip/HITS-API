@@ -32,6 +32,7 @@ get '/' => sub {
 			app
 		WHERE
 			vendor_id = ?
+			OR pub = 'y'
 	});
 	$sth->execute($vendor_id);
 	return {
