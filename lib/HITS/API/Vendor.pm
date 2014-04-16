@@ -11,6 +11,11 @@ HITS::API::Vendor - List and maintain vendors
 
 =cut
 
+#
+# TODO:
+# 	Application Permissios ?
+#
+
 our $VERSION = '0.1';
 prefix '/vendor';
 set serializer => 'JSON';
@@ -25,7 +30,7 @@ get '/' => sub {
 		FROM
 			vendor
 	});
-	$sth->execute($vendor_id);
+	$sth->execute();
 	return {
 		vendor => $sth->fetchall_arrayref({}),
 	};
