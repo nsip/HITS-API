@@ -9,6 +9,10 @@ API:
 	/tags		Manage arbitrary tags against a user
 		Types of tags (e.g. ...
 
+		* POST tag to current user ?
+	
+		* 
+
 
 	/edit ? 
 	/metadata ? 
@@ -81,3 +85,8 @@ QLD: Levels...
 DATA FLOW
 
 	
+CREATE NEW VENDOR
+	* Login using REMOTE_USER
+	* Create Vendor matching REMOTE_USER
+	* Create School matching REMOTE_USER
+

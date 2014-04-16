@@ -34,5 +34,9 @@ get '/' => sub {
 get '/:id' => sub {
 };
 
+post '/' => sub {
+	
+};
+
 true;
 

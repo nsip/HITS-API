@@ -5,10 +5,13 @@ use Dancer ':syntax';
 use Dancer::Plugin::REST;
 use Dancer::Plugin::Database;
 
+use HITS::API::Security;
+
 use HITS::API::App;
 use HITS::API::Tag;
 use HITS::API::Vendor;
 use HITS::API::View;
+use HITS::API::School;
 
 our $VERSION = '0.1';
 prefix undef;
