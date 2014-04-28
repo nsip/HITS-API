@@ -22,6 +22,10 @@ hook 'before' => sub {
 
 	debug("LOGIN = " . request->user);
 
+	if (! request->user) {
+		die "No logged in user";
+	}
+
 	# Lookup / create Login
 	my $sth = database->prepare(q{SELECT * FROM login WHERE drupal_id = ?});
 	$sth->execute(request->user);

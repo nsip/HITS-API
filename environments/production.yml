@@ -15,3 +15,14 @@ show_errors: 0
 # cache route resolution for maximum performance
 route_cache: 1
 
+plugins:
+    Database:
+        driver: 'mysql'
+        host: 'sifau.cspvdo7mmaoe.ap-southeast-2.rds.amazonaws.com'
+        database: 'hits'
+        username: 'sifau'
+        password: '03_SIS_was_not'
+        dbi_params:
+            RaiseError: 1
+            AutoCommit: 1
+        log_queries: 1
