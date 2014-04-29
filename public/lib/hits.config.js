@@ -1,3 +1,3 @@
 hits_config = {
-	endpoint: '/'
+	endpoint: '/api/'
 };

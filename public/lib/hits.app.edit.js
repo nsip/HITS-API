@@ -10,5 +10,7 @@ $.fn.hits_app_edit = function () {
 };
 
 // CREATE vs UPDATE
-$('.hits-appedit').hits_app_edit();
+$( document ).ready(function() {
+	$('.hits-appedit').hits_app_edit();
+});
 

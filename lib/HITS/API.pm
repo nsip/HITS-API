@@ -45,6 +45,7 @@ get '/' => sub {
 			description => "List of view and access to some data",
 			href => "" . uri_for('view/'),
 		},
+		current => vars->{current},
 	}
 };
 

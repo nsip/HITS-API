@@ -70,6 +70,13 @@ hook 'before' => sub {
 
 	database->commit();
 	# header('Cache-Control' =>  'no-store, no-cache, must-revalidate')
+
+	var current => {
+		login => $login,
+		vendor => $vendor,
+		school => $school,
+	};
+
 };
 
 true
