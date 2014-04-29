@@ -38,6 +38,9 @@ hits_api = {
 			);
 
 			hits_api.api.add('app');
+			hits_api.api.add('tag');
+			hits_api.api.add('school');
+			hits_api.api.add('vendor');
 			hits_api.api.app.add('action');
 		}
 		return hits_api.api;

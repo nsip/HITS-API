@@ -71,6 +71,12 @@ post '/' => sub {
 	#	icon			Optional URL for the Icon
 	#	public			Yes / No 
 
+	if (! params->{title}) {
+		return {
+			success => 0,
+		};
+	}
+
 	$sth->execute(
 		$id, vars->{current}{vendor}{id}, params->{name}, params->{title}, params->{description},
 		params->{site_url}, params->{icon_url}, 
