@@ -1,2 +1,2 @@
 build:
-	cd public/lib; cat start.js jquery.rest.js hits.api.js hits.app.edit.js hits.app.list.js hits.config.js hits.school.app.js end.js > all.js
+	cd public/lib; cat start.js jquery.rest.js jquery-ui.js hits.api.js hits.app.edit.js hits.app.list.js hits.config.js hits.school.app.js end.js > all.js
