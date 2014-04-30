@@ -4,41 +4,46 @@
 
 $.fn.hits_app_edit = function () {
 	return this.each(function () {
-
-		// if ($this.find(q
-
-		// Experimental form - add a new entry
 		var $this = $(this);
-		$this.append("<h2>Javascript FORM Added</h2>");
-		$this.append('Example Date Picker: <input id="datepicker"> <br />');
-		$this.find('#datepicker').datepicker();
 
-		// var $tbody = $this.find('tbody');
-		$this.append('Name: <input name="name"> <br />');
-		$this.append('Title: <input name="title"> <br />');
-		$this.append('Description: <input name="description"> <br />');
-		$this.append('Site URL: <input name="site_url"> <br />');
-		$this.append('About URL: <input name="about"> <br />');
-		$this.append('Tags: <input name="tags"> <br />');
-		$this.append('Icon URL: <input name="icon_url"> <br />');
-		$this.append('Public: <input name="public"> <br />');
+		var $form = $this.find('form');
+		if (! $form.length) {
+			$this.append('<form></form>');
+			$form = $this.find('form');
 
-		$this.append('<br>');
-		$this.append('<input type="submit" name="clear" value="Clear">');
-		$this.append('<input type="submit" name="submit" value="Save">');
+			// Experimental form - add a new entry
+			$form.append("<h2>Javascript FORM Added</h2>");
+			$form.append('Example Date Picker: <input id="datepicker"> <br />');
+			$form.find('#datepicker').datepicker();
 
-		$this.find('input[name="clear"]').click(function() {
+			// var $tbody = $this.find('tbody');
+			$form.append('Name: <input name="name"> <br />');
+			$form.append('Title: <input name="title"> <br />');
+			$form.append('Description: <input name="description"> <br />');
+			$form.append('Site URL: <input name="site_url"> <br />');
+			$form.append('About URL: <input name="about"> <br />');
+			$form.append('Tags: <input name="tags"> <br />');
+			$form.append('Icon URL: <input name="icon_url"> <br />');
+			$form.append('Public: <input name="public"> <br />');
+
+			$form.append('<br>');
+			$form.append('<input type="submit" name="clear" value="Clear">');
+			$form.append('<input type="submit" name="submit" value="Save">');
+		}
+
+		$form.find('input[name="clear"]').click(function() {
 			alert("Clearing");
 			return false;
 		});
-		$this.find('input[name="submit"]').click(function() {
+
+		$form.find('input[name="submit"]').click(function() {
 			hits_api.rest().app.create({
-				name: $this.find('input[name="name"]').val() + '',
-				title: $this.find('input[name="title"]').val() + '',
-				description: $this.find('input[name="description"]').val() + '',
-				site_url: $this.find('input[name="site_url"]').val() + '',
-				about: $this.find('input[name="about"]').val() + '',
-				tags: $this.find('input[name="tags"]').val() + '',
+				name: $form.find('input[name="name"]').val() + '',
+				title: $form.find('input[name="title"]').val() + '',
+				description: $form.find('input[name="description"]').val() + '',
+				site_url: $form.find('input[name="site_url"]').val() + '',
+				about: $form.find('input[name="about"]').val() + '',
+				tags: $form.find('input[name="tags"]').val() + '',
 			}).done(function(data) {
 				console.log(data);
 				alert("Created, new ID = " + data.id);

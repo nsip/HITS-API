@@ -16,8 +16,6 @@ prefix '/school';
 set serializer => 'JSON';
 
 get '/' => sub {
-	my $vendor_id = 'test1';	# XXX
-
 	my $base = uri_for('/school/'). "";
 	# XXX vendor details ?
 	my $sth = database->prepare(qq{
@@ -25,10 +23,8 @@ get '/' => sub {
 			*
 		FROM
 			school
-		WHERE
-			vendor_id = ?
 	});
-	$sth->execute($vendor_id);
+	$sth->execute();
 	return {
 		school => $sth->fetchall_arrayref({}),
 	};

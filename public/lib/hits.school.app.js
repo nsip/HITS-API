@@ -25,7 +25,7 @@ $('.hits-appedit').hits_app_edit();
 */
 
 hits_school = {
-	list: function() {
+	list: function(school_id, el) {
 	},
 
 	add: function(school_id, app_id) {
@@ -38,3 +38,10 @@ hits_school = {
 		});
 	}
 };
+
+
+$( document ).ready(function() {
+	hits_school.list($('.hits-school-app-list');
+});
+
+
