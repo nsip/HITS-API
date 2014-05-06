@@ -19,6 +19,9 @@ set serializer => 'JSON';
 get '/' => sub {
 	my $ret = {};
 	foreach my $t (database('SIF')->tables) {
+		$t =~ s/^.+\.//;
+		$t =~ s/'//g;
+		$t =~ s/`//g;
 		$ret->{$t} = {
 			href => uri_for('view/' . $t) . '',
 		};
