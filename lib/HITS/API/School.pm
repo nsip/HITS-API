@@ -17,7 +17,6 @@ set serializer => 'JSON';
 
 get '/' => sub {
 	my $base = uri_for('/school/'). "";
-	# XXX vendor details ?
 	my $sth = database->prepare(qq{
 		SELECT
 			*

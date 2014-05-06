@@ -54,27 +54,12 @@ hook 'before' => sub {
 		info("CREATE VENDOR: " . $login->{id});
 	}
 
-	# Lookup / create school (assume Vendor ID)
-	$sth = database->prepare(q{SELECT * FROM school WHERE id = ?});
-	$sth->execute($login->{id});
-	my $school = $sth->fetchrow_hashref;
-	if (!$school) {
-		$school = {
-			id => $login->{id},
-			name => $login->{drupal_id} . " SCHOOL",
-		};
-		$sth = database->prepare(q{INSERT INTO school (id, name) VALUES (?, ?)});
-		$sth->execute($school->{id}, $school->{name});
-		info("CREATE SCHOOL: " . $login->{id});
-	}
-
 	database->commit();
 	# header('Cache-Control' =>  'no-store, no-cache, must-revalidate')
 
 	var current => {
 		login => $login,
 		vendor => $vendor,
-		school => $school,
 	};
 
 };
