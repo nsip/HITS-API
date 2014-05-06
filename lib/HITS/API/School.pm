@@ -161,9 +161,7 @@ get '/:id/app/:appId' => sub {
 			AND vendor.id = app.vendor_id
 	});
 	$sth->execute(params->{id}, params->{appId});
-	return {
-		app => $sth->fetchall_arrayref({}),
-	};
+	return $sth->fetchrow_hashref;
 };
 
 del '/:id/app/:appId' => sub {
