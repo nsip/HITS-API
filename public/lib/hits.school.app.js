@@ -41,7 +41,7 @@ hits_school = {
 
 
 $( document ).ready(function() {
-	hits_school.list($('.hits-school-app-list');
+	hits_school.list($('.hits-school-app-list'));
 });
 
 

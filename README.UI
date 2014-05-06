@@ -1,0 +1,22 @@
+User Interface Notes:
+
+* API
+	API is stand alone. We can write desktop applications or command line
+	tools to allow vendors to manage their own apps.
+
+* jQuery Additions to Drupal
+	Version 1 (May 2014) is just using VERY primative jQuery additions
+	to the existing HTML loaded via Drupal.
+
+	+ Allow drupal editors to control presentation
+	- Very restricted on Widgets being used (could be addressed with classes)
+
+* Full Ext Application
+	Not currently being consdiered
+
+	+ Very powerful presentation
+	+ Easy mobile integration
+	- Mobile and Desktop application probably separate
+	- No real integration possible with Drupal etc
+
+* 

@@ -28,7 +28,7 @@ $.fn.hits_app_edit = function () {
 
 			$form.append('<br>');
 			$form.append('<input type="submit" name="clear" value="Clear">');
-			$form.append('<input type="submit" name="submit" value="Save">');
+			$form.append('<button type="submit" name="submit" value="submit">Save</button>');
 		}
 
 		$form.find('input[name="clear"]').click(function() {
@@ -36,7 +36,8 @@ $.fn.hits_app_edit = function () {
 			return false;
 		});
 
-		$form.find('input[name="submit"]').click(function() {
+		console.log("Adding submit");
+		$form.find('button[value="submit"]').click(function() {
 			hits_api.rest().app.create({
 				name: $form.find('input[name="name"]').val() + '',
 				title: $form.find('input[name="title"]').val() + '',

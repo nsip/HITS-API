@@ -11,11 +11,15 @@ $.fn.hits_app_list = function () {
 		.done(function(data) {
 			if (data && data.app) {
 				$tbody.empty();
+				// XXX Quick hack table row - later add proper templates
 				$.each( data.app, function(i, v) {
 					$tbody.append(''
 						+ '<tr>'
 						+ '<td>' + v.id + '</td>'
+						+ '<td>' + v.name + '</td>'
 						+ '<td>' + v.title + '</td>'
+						+ '<td>' + v.tags + '</td>'
+						+ '<td>' + v.pub + '</td>'
 						+ '</tr>'
 					);
 				});
