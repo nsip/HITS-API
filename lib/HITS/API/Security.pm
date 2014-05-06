@@ -17,23 +17,29 @@ HITS::API::Security - Authentication methods
 =cut
 
 hook 'before' => sub {
+	my $user;
+	if (config->{hits}{user} eq 'REQUEST') {
+		$user = request->user;
+	}
+	else {
+		$user = config->{hits}{user};
+	}
 
 	# NOTE: This could be moved to at login rather than each request for speed
+	debug("LOGIN = " . $user);
 
-	debug("LOGIN = " . request->user);
-
-	if (! request->user) {
+	if (! $user) {
 		die "No logged in user";
 	}
 
 	# Lookup / create Login
 	my $sth = database->prepare(q{SELECT * FROM login WHERE drupal_id = ?});
-	$sth->execute(request->user);
+	$sth->execute($user);
 	my $login = $sth->fetchrow_hashref;
 	if (!$login) {
 		$login = {
 			id => createId,
-			drupal_id => request->user,
+			drupal_id => $user,
 		};
 		$sth = database->prepare(q{INSERT INTO login (id, drupal_id) VALUES (?, ?)});
 		$sth->execute($login->{id}, $login->{drupal_id});

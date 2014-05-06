@@ -34,11 +34,6 @@ template: "simple"
 
 #plugins:
 #    Database:
-#        driver: 'mysqlPP'
-#        host: 'sifau.cspvdo7mmaoe.ap-southeast-2.rds.amazonaws.com'
-#        database: 'hits'
-#        username: 'sifau'
-#        password: '03_SIS_was_not'
 #        dbi_params:
 #            RaiseError: 1
 #            AutoCommit: 1
@@ -47,12 +42,33 @@ template: "simple"
 plugins:
     Database:
         driver: 'mysqlPP'
-        host: 'localhost'
+        host: 'sifau.cspvdo7mmaoe.ap-southeast-2.rds.amazonaws.com'
         database: 'hits'
-        username: 'scottp'
-        password: 'freddy'
+        username: 'sifau'
+        password: '03_SIS_was_not'
+        #driver: 'mysqlPP'
+        #host: 'localhost'
+        #database: 'hits'
+        #username: 'scottp'
+        #password: 'freddy'
         dbi_params:
             RaiseError: 1
             AutoCommit: 1
         log_queries: 1
+        connections:
+            SIF:
+                driver: 'mysqlPP'
+                host: 'sifau.cspvdo7mmaoe.ap-southeast-2.rds.amazonaws.com'
+                database: 'X'
+                username: 'sifau'
+                password: '03_SIS_was_not'
+                dbi_params:
+                    RaiseError: 1
+                    AutoCommit: 1
+                log_queries: 1
 
+# HITS configuration
+hits:
+    # REQUEST = request->user, e.g. from Apache
+    #user: 'REQUEST'				
+    user: 'scottp'

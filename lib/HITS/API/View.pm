@@ -15,10 +15,28 @@ our $VERSION = '0.1';
 prefix '/view';
 set serializer => 'JSON';
 
-# XXX List tables
+# List tables
 get '/' => sub {
+	my $ret = {};
+	foreach my $t (database('SIF')->tables) {
+		$ret->{$t} = {
+			href => uri_for('view/' . $t) . '',
+		};
+	}
+	return {
+		table => $ret,
+	};
 };
 
-# XXX View a single table
+# List data
 get '/:id' => sub {
+	# TODO - Add some href links & allow configurable limits, filters and sorting
+	my $sth = database('SIF')->prepare('SELECT * FROM ' . params->{id} . ' LIMIT 250');
+	info('SELECT * FROM ' . params->{id} . ' LIMIT 250');
+	$sth->execute;
+	return {
+		data => $sth->fetchall_arrayref({}),
+	};
 };
+
+true;
