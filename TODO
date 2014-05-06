@@ -4,3 +4,7 @@ Move API Docs to "Developer Documentation"
 Add SIS Viewer
 
 Add Vocab
+
+PASSWORDS:
+	* Change MySQL password & Check security of server
+	* Move Password authentication to non-GIT File.

@@ -19,7 +19,7 @@ get '/' => sub {
 	my $base = uri_for('/school/'). "";
 	my $sth = database->prepare(qq{
 		SELECT
-			*
+			id, name, concat('$base', id) as href
 		FROM
 			school
 	});
@@ -53,9 +53,10 @@ post '/' => sub {
 
 # Get Full Details for ONE App
 get '/:id' => sub {
+	my $base = uri_for('/school/'). "";
 	my $sth = database->prepare(qq{
 		SELECT
-			*
+			id, name, concat('$base', id, '/app') as app
 		FROM
 			school
 		WHERE
@@ -107,12 +108,14 @@ del ':id' => sub {
 # School Apps
 # ==============================================================================
 get '/:id/app' => sub {
+	my $base = uri_for('/school/' . params->{id} . '/app/'). "";
 	my $sth = database->prepare(qq{
 		SELECT
 			app.id, app.name, app.title, app.description,
 			app.site_url, app.icon_url,
 			app.about, app.tags, app.pub,
-			app.vendor_id, vendor.name vendor_name
+			app.vendor_id, vendor.name vendor_name,
+			concat('$base', app.id) as href
 		FROM
 			school_app, app, vendor
 		WHERE
