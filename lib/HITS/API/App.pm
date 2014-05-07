@@ -143,5 +143,30 @@ del ':id' => sub {
 	};
 };
 
+get '/:id/sif' => sub {
+	# XXX SIF Example data
+	return {
+		xml => q{
+<environment xmlns="http://www.sifassociation.org/infrastructure/3.0.1">
+  <solutionId>HITS</solutionId>
+  <authenticationMethod>Basic</authenticationMethod>
+  <userToken>EduApp-NSW-4001</userToken>
+  <consumerName>Consumer A</consumerName>
+  <applicationInfo>
+    <applicationKey>EduTech-HITS</applicationKey>
+    <supportedInfrastructureVersion>3.0.1</supportedInfrastructureVersion>
+    <dataModelNamespace>http://www.sifassociation.org/au/datamodel/1.3</dataModelNamespace>
+    <transport>REST</transport>
+    <applicationProduct>
+      <vendorName>NSIP</vendorName>
+      <productName>HITS Test Harness</productName>
+      <productVersion>0.1alpha</productVersion>
+    </applicationProduct>
+  </applicationInfo>
+</environment>
+},
+	};
+};
+
 true;
 

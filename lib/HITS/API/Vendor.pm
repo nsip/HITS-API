@@ -84,5 +84,42 @@ put '/:id' => sub {
 #del ':id' => sub {
 #};
 
+get '/:id/info' => sub {
+	my $sth = database->prepare(qq{
+		SELECT
+			*
+		FROM
+			vendor_info
+		WHERE
+			vendor_id = ?
+	});
+	$sth->execute();
+	my $data = {};
+	while (my $ref = $sth->fetchrow_hashref) {
+		$data->{$ref->{field}} = $ref->{value};
+	}
+
+	return {
+		info => $data,
+	};
+};
+
+post '/:id/info' => sub {
+	if (params->{info}) {
+		my $delsth = database->prepare(q{DELETE FROM vendor_info WHERE vendor_id = ? AND field = ?});
+		my $inssth = database->prepare(q{INSERT INTO vendor_info (vendor_id, field, value) VALUES (?, ?, ?)});
+		foreach my $key (keys %{params->{info}}) {
+			$delsth->execute('' . params->{id}, $key);
+			$inssth->execute('' . params->{id}, $key, '' . params->{info}{$key});
+		}
+	}
+	database->commit();
+
+	return {
+		success => 1,
+	}
+};
+
+
 true;
 

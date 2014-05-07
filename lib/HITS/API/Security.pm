@@ -68,6 +68,13 @@ hook 'before' => sub {
 		vendor => $vendor,
 	};
 
+	my $pi = request->path_info;
+	my $cu = $vendor->{id};
+	$pi =~ s/currentVendor/$cu/g;
+	if (request->path_info ne $pi) {
+		debug("Changing path info - mapping currentVendor - $pi");
+		request->path_info($pi);
+	}
 };
 
 true
