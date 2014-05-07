@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS vendor (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS vendor_info (
-	vendor_id VARCHAR(36) UNIQUE,
+	vendor_id VARCHAR(36),
 	field VARCHAR(100),
 	value TEXT,
 	FOREIGN KEY (vendor_id) REFERENCES vendor(id)
@@ -48,8 +48,8 @@ CREATE TABLE IF NOT EXISTS school_app (
 	school_id VARCHAR(36),
 	app_id VARCHAR(36),
 	FOREIGN KEY (school_id) REFERENCES school(id),
-	FOREIGN KEY (app_id) REFERENCES app(id),
-	UNIQUE INDEX 'school_app' (school_id, app_id)
+	FOREIGN KEY (app_id) REFERENCES app(id) -- ,
+	-- UNIQUE INDEX 'school_app' (school_id, app_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- SIF / API Identification

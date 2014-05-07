@@ -5,35 +5,41 @@
 $.fn.hits_vendor_info = function () {
 	return this.each(function () {
 		var $this = $(this);
-
 		var $form = $this.find('form');
 
 		// Find list of fields
-		$form.find('input').each(function(e) {
+		var fields = [];
+		$form.find('input').each(function(index,element) {
+			fields.push(element);
 		});
+		$form.hide();
 
 		// Load existing data
+		console.log("Hello world... about to load");
 		hits_api.rest().vendor.info.read('currentVendor')
 		.done(function(data) {
+			$form.show();
 			if (data && data.info) {
-				console.log(data);
+				$.each(fields, function(index,element) {
+					$(element).val(data.info[$(element).attr('name')]);
+				});
 			}
-		});
 
-		// Bind to save (only after loaded)
-		$form.find('button[value="submit"]').click(function() {
-			hits_api.rest().app.create({
-				name: $form.find('input[name="name"]').val() + '',
-				title: $form.find('input[name="title"]').val() + '',
-				description: $form.find('input[name="description"]').val() + '',
-				site_url: $form.find('input[name="site_url"]').val() + '',
-				about: $form.find('input[name="about"]').val() + '',
-				tags: $form.find('input[name="tags"]').val() + '',
-			}).done(function(data) {
-				console.log(data);
-				alert("Created, new ID = " + data.id);
+			$form.find('button').click(function() {
+				var data = {};
+				$.each(fields, function(index,element) {
+					var name = $(element).attr('name');
+					data[name] = $(element).val();
+				});
+				
+				hits_api.rest().vendor.info.create('currentVendor', {
+					info: data
+				}).done(function(data) {
+					console.log(data);
+					alert("Saved");
+				});
+				return false;
 			});
-			return false;
 		});
 	});
 };
