@@ -93,7 +93,7 @@ get '/:id/info' => sub {
 		WHERE
 			vendor_id = ?
 	});
-	$sth->execute();
+	$sth->execute(params->{id});
 	my $data = {};
 	while (my $ref = $sth->fetchrow_hashref) {
 		$data->{$ref->{field}} = $ref->{value};
