@@ -11,20 +11,6 @@
 
 */
 
-/*
-$.fn.hits_app_edit = function () {
-	return this.each(function () {
-		var $this = $(this);
-		var $tbody = $this.find('tbody');
-	});
-};
-
-// CREATE vs UPDATE
-$('.hits-appedit').hits_app_edit();
-
-*/
-
-
 $.fn.hits_school_app_list = function () {
         return this.each(function () {
 		var school_id = $.url().param('school_id');
@@ -34,7 +20,21 @@ $.fn.hits_school_app_list = function () {
 		}
                 var $this = $(this);
                 var $tbody = $this.find('tbody');
-		alert("Found school list for " + school_id);
+		hits_api.rest().school.app.read(school_id)
+		.done(function(data) {
+			$.each( data.app, function(i, v) {
+				$tbody.append(''
+					+ '<tr>'
+					+ '<td>' + v.id + '</td>'
+					+ '<td>' + v.name + '</td>'
+					+ '<td><a href="school-app-view?school_id=' + school_id + '&app_id=' + v.id + '">View</a></td>'
+					+ '</tr>'
+				);
+			});
+		})
+		.fail(function() {
+			alert("Failed");
+		});
 	});
 };
                 
@@ -46,30 +46,58 @@ $.fn.hits_school_app_add = function () {
 			return;
 		}
                 var $this = $(this);
-                var $tbody = $this.find('tbody');
+                var $selectapp = $this.find('select[name="app"]');
 		hits_api.rest().app.read()
 		.done(function(data) {
-			alert("List apps");
-			console.log(data);
+			$.each(data.app, function (i,e) {
+				$selectapp.append('<option value="' 
+					+ e.id + '">' 
+					+ e.name + ": " + e.title + " (" + e.vendor_name 
+					+ ")</option>"
+				);
+			});
+		})
+		.fail(function() {
+			alert("Failed");
+		});
+
+		$this.submit(function(event) {
+			event.preventDefault();
+			hits_api.rest().school.app.create(school_id, { app_id: $selectapp.val() })
+			.done(function() {
+				alert("Added - reloading list");
+				location.reload();
+			})
+			.fail(function() {
+				alert("Failed to add application");
+			});
+		});
+	});
+};
+
+$.fn.hits_school_app_view = function () {
+        return this.each(function () {
+		var school_id = $.url().param('school_id');
+		var app_id = $.url().param('app_id');
+		if (! school_id || ! app_id) {
+			alert("Must select a APP ID and school ID first");
+			return;
+		}
+                var $this = $(this);
+		hits_api.rest().school.app.read(school_id, app_id)
+		.done(function(data) {
+			alert("Loaded single app");
+			$.each(data.app, function (i,e) {
+			})
 		})
 		.fail(function() {
 			alert("Failed");
 		});
 	});
-
-	/*
-		hits_api.rest().school.app.create(school_id, { app_id: app_id })
-		.done(function() {
-			alert("Added");
-		})
-		.fail(function() {
-			alert("Failed");
-		});
-	}
-*/
 };
 
 $( document ).ready(function() {
 	$('.hits-school-app-list').hits_school_app_list();
 	$('.hits-school-app-add').hits_school_app_add();
+	$('.hits-school-app-view').hits_school_app_view();
 });

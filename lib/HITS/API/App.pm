@@ -25,12 +25,12 @@ get '/' => sub {
 	# XXX vendor details ?
 	my $sth = database->prepare(qq{
 		SELECT
-			*
+			app.*, vendor.name as vendor_name
 		FROM
-			app
+			app, vendor
 		WHERE
-			vendor_id = ?
-			OR pub = 'y'
+			(app.vendor_id = ? OR app.pub = 'y')
+			AND vendor.id = app.vendor_id
 	});
 	$sth->execute(vars->{current}{vendor}{id});
 	return {
