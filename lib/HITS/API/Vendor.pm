@@ -129,13 +129,15 @@ get '/:id/app' => sub {
                         app.site_url, app.icon_url,
                         app.about, app.tags, app.pub,
                         app.vendor_id, vendor.name vendor_name,
-                        concat('$base', school_app.school_id, '/app/', app.id) as href
+                        concat('$base', school_app.school_id, '/app/', app.id) as href,
+			school.name as school_name
                 FROM
-                        school_app, app, vendor
+                        school_app, app, vendor, school
                 WHERE
 			vendor.id = ?
                         AND app.id = school_app.app_id
                         AND vendor.id = app.vendor_id
+			AND school.id = school_app.school_id
         });
         $sth->execute(params->{id});
         return {
