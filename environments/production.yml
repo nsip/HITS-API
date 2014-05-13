@@ -1,7 +1,7 @@
 # configuration file for production environment
 
 # only log warning and error messages
-log: "warning"
+log: "debug"
 
 # log message to a file in logs/
 logger: "file"
@@ -41,4 +41,5 @@ plugins:
 # HITS configuration
 hits:
     # REQUEST = request->user, e.g. from Apache
-    user: 'REQUEST'				
+    # user: 'REQUEST'				
+    user: 'COOKIE:sif-hits-api'				

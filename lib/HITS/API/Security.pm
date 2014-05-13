@@ -18,7 +18,12 @@ HITS::API::Security - Authentication methods
 
 hook 'before' => sub {
 	my $user;
-	if (config->{hits}{user} eq 'REQUEST') {
+	if (config->{hits}{user} =~ /^COOKIE:(.+)$/) {
+		my $c = $1;
+		$user = cookie $c;
+		info ("Getting cookie for $c = $user");
+	}
+	elsif (config->{hits}{user} eq 'REQUEST') {
 		$user = request->user;
 	}
 	else {
@@ -26,7 +31,7 @@ hook 'before' => sub {
 	}
 
 	# NOTE: This could be moved to at login rather than each request for speed
-	debug("LOGIN = " . $user);
+	info("LOGIN = " . $user);
 
 	if (! $user) {
 		die "No logged in user";
