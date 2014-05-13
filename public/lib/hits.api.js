@@ -43,6 +43,7 @@ hits_api = {
 			hits_api.api.school.add('app');
 			hits_api.api.add('vendor');
 			hits_api.api.vendor.add('info');
+			hits_api.api.vendor.add('app');
 			hits_api.api.app.add('action');
 		}
 		return hits_api.api;

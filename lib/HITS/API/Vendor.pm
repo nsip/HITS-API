@@ -120,6 +120,28 @@ post '/:id/info' => sub {
 	}
 };
 
+# XXX This should probably be School or App with properties?
+get '/:id/app' => sub {
+        my $base = uri_for('/school/');
+        my $sth = database->prepare(qq{
+                SELECT
+                        app.id, app.name, app.title, app.description,
+                        app.site_url, app.icon_url,
+                        app.about, app.tags, app.pub,
+                        app.vendor_id, vendor.name vendor_name,
+                        concat('$base', school_app.school_id, '/app/', app.id) as href
+                FROM
+                        school_app, app, vendor
+                WHERE
+			vendor.id = ?
+                        AND app.id = school_app.app_id
+                        AND vendor.id = app.vendor_id
+        });
+        $sth->execute(params->{id});
+        return {
+                app => $sth->fetchall_arrayref({}),
+        };
+};
 
 true;
 
