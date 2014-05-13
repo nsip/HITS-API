@@ -39,7 +39,11 @@ get '/' => sub {
 	    {
 	      "path" => "/tag",
 	      "description" => "Tagging",
-	    }
+	    },
+	    {
+	      "path" => "/direct",
+	      "description" => "Direct - JSON based School/Student/Teacher access",
+	    },
 	  ],
 	  "info" => {
 	    "title" => "HITS API",
@@ -221,6 +225,32 @@ get '/:id' => sub {
 					makeOperation('DELETE', 'school/{schoolId}/app/{appId}', 'DELETE Schools APP association'),
 				],
 			}
+		],
+		direct => [
+			{
+				path => '/direct/{token}',
+				operations => [
+					makeOperation('GET', 'direct/{token}', 'List available objects'),
+				],
+			},
+			{
+				path => '/direct/{token}/object/school',
+				operations => [
+					makeOperation('GET', 'direct/{token}/object/school', 'List Schools'),
+				],
+			},
+			{
+				path => '/direct/{token}/object/student',
+				operations => [
+					makeOperation('GET', 'direct/{token}/object/student', 'List Students'),
+				],
+			},
+			{
+				path => '/direct/{token}/object/teacher',
+				operations => [
+					makeOperation('GET', 'direct/{token}/object/teacher', 'List Teachers'),
+				],
+			},
 		],
 	};
 
