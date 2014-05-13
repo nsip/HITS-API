@@ -17,7 +17,7 @@ set serializer => 'JSON';
 
 get '/' => sub {
 	return {
-	  "apiVersion" => "1.0.0",
+	  "apiVersion" => "0.0.1",
 	  "swaggerVersion" => "1.2",
 	  "apis" => [
 	    {
@@ -30,11 +30,11 @@ get '/' => sub {
 	    },
 	    {
 	      "path" => "/school",
-	      "description" => "Schools",
+	      "description" => "Schools - List, Adding applications, Tokens",
 	    },
 	    {
 	      "path" => "/vendor",
-	      "description" => "Vendors",
+	      "description" => "Vendors - Details",
 	    },
 	    {
 	      "path" => "/tag",
@@ -175,6 +175,50 @@ get '/:id' => sub {
 						exampleOne => "anything",
 						exampleTwo => "you need to store",
 					}),
+				],
+			}
+		],
+		view => [
+			{
+				path => '/view',
+				operations => [
+					makeOperation('GET', 'view', 'List SIS Tables'),
+				],
+			},
+			{
+				path => '/view/{tableId}',
+				operations => [
+					makeOperation('GET', 'view/{tableId}', 'Get table data from SIS'),
+				],
+			}
+		],
+		school => [
+			{
+				path => '/school',
+				operations => [
+					makeOperation('GET', 'school', 'List Schools'),
+				],
+			},
+			{
+				path => '/school/{schoolId}',
+				operations => [
+					makeOperation('GET', 'school/{schoolId}', 'Get School'),
+				],
+			},
+			{
+				path => '/school/{schoolId}/app',
+				operations => [
+					makeOperation('GET', 'school/{schoolId}/app', 'Get Schools APP List'),
+					makeOperationPOST('school/{schoolId}/app', 'Create Schools APP List', {
+						app_id => '',
+					}),
+				],
+			},
+			{
+				path => '/school/{schoolId}/app/{appId}',
+				operations => [
+					makeOperation('GET', 'school/{schoolId}/app/{appId}', 'Schools APP association including Tokens and Auth data'),
+					makeOperation('DELETE', 'school/{schoolId}/app/{appId}', 'DELETE Schools APP association'),
 				],
 			}
 		],
