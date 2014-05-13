@@ -161,7 +161,45 @@ get '/:id/app/:appId' => sub {
 			AND vendor.id = app.vendor_id
 	});
 	$sth->execute(params->{id}, params->{appId});
-	return $sth->fetchrow_hashref // {};
+	my $data = $sth->fetchrow_hashref;
+	if (!$data) {
+		return status_not_found("school app  doesn't exists");
+	}
+
+	# SIF Authentication
+	$data->{sif} = {
+		url => 'http://hits.dev.nsip.edu.au:8080/SIF3InfraREST/hits/environments/environment',
+		solution_id =>  'HITS',
+		applicaiton_key => 'HITS',
+		password => 'hits@nsip',
+		user_token => params->{id},
+		instance_id => 'VendorXXX-AppYYY',
+		#		xml => qq{<environment xmlns="http://www.sifassociation.org/infrastructure/3.0.1">
+		#	<solutionId>HITS</solutionId>
+		#	<authenticationMethod>Basic</authenticationMethod>
+		#	<instanceId>EDVAL-TT</instanceId>
+		#	<userToken>D3E34B359D75101A8C3D00AA001A1651</userToken>
+		#	<consumerName>Consumer A</consumerName>
+		#	<applicationInfo>
+		#		<applicationKey>HITS</applicationKey>
+		#		<supportedInfrastructureVersion>3.0.1</supportedInfrastructureVersion>
+		#		<dataModelNamespace>http://www.sifassociation.org/au/datamodel/1.3</dataModelNamespace>
+		#		<transport>REST</transport>
+		#		<applicationProduct>
+		#		<vendorName>NSIP</vendorName>
+		#		<productName>HITS Test Harness</productName>
+		#		<productVersion>0.1alpha</productVersion>
+		#		</applicationProduct>
+		#	</applicationInfo>
+		#</environment>},
+	};
+
+	# DIRECT Authentication
+	$data->{test} = {
+		url => 'XXX',
+	};
+
+	return $data;
 };
 
 del '/:id/app/:appId' => sub {

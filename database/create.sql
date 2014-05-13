@@ -47,10 +47,19 @@ CREATE TABLE IF NOT EXISTS school (
 CREATE TABLE IF NOT EXISTS school_app (
 	school_id VARCHAR(36),
 	app_id VARCHAR(36),
+	token VARCHAR(100),		-- A token for direct access
 	FOREIGN KEY (school_id) REFERENCES school(id),
 	FOREIGN KEY (app_id) REFERENCES app(id) -- ,
 	-- UNIQUE INDEX 'school_app' (school_id, app_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- CREATE TABLE IF NOT EXISTS token (
+-- 	token VARCHAR(100),
+-- 	-- expiry	-- Expire a token
+-- 	-- restrictions	-- Other restrictions, like IP, applications etc
+-- 	what VARCHAR(100),	-- What access, e.g. school_app ?
+-- 	
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- SIF / API Identification
 
