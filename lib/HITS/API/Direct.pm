@@ -34,28 +34,58 @@ get '/:token' => sub {
 	if (!$school_app) {
 		return status_not_found("token not found");
 	}
+	my $base = uri_for('direct/' . params->{token}) . "/object";
 	return {
-		success => 1,
-	};
-	my $ret = {};
-	foreach my $t (database('SIF')->tables) {
-		$t =~ s/^.+\.//;
-		$t =~ s/'//g;
-		$t =~ s/`//g;
-		$ret->{$t} = {
-			href => uri_for('view/' . $t) . '',
-		};
-	}
-	return {
-		table => $ret,
+		school => {
+			title => 'Schools',
+			description => '',
+			href => "$base/school",
+		},
+		student => {
+			title => 'Students',
+			description => '',
+			href => "$base/student",
+		},
+		teacher => {
+			title => 'Teachers',
+			description => '',
+			href => "$base/teacher",
+		},
 	};
 };
 
 get '/:token/object/:table' => sub {
-	# TODO - Add some href links & allow configurable limits, filters and sorting
-	my $sth = database('SIF')->prepare('SELECT * FROM ' . params->{id} . ' LIMIT 250');
-	info('SELECT * FROM ' . params->{id} . ' LIMIT 250');
-	$sth->execute;
+	my $school_app = getToken(params->{token});
+	if (!$school_app) {
+		return status_not_found("token not found");
+	}
+
+	my $map = {
+		school => q{
+			SELECT RefId as id, SchoolName as title
+			FROM SchoolInfo
+			WHERE RefId = ?
+			ORDER BY RefId
+			LIMIT 100
+		},
+		student => q{
+			SELECT RefId as id, GivenName as first_name, FamilyName as last_name
+			FROM StudentPersonal
+			WHERE SchoolInfo_RefId = ?
+			ORDER BY RefId
+			LIMIT 100
+		},
+		teacher => q{
+			SELECT RefId as id, GivenName as first_name, FamilyName as last_name
+			FROM StaffPersonal
+			WHERE SchoolInfo_RefId = ?
+			ORDER BY RefId
+			LIMIT 100
+		},
+	};
+
+	my $sth = database('SIF')->prepare($map->{params->{table}});
+	$sth->execute($school_app->{school_id});
 	return {
 		data => $sth->fetchall_arrayref({}),
 	};
