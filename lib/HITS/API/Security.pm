@@ -34,7 +34,10 @@ hook 'before' => sub {
 	info("LOGIN = " . $user);
 
 	if (! $user) {
-		die "No logged in user";
+                return halt(Dancer::Response->new(
+                        status => 401,
+                        content => q{Not logged in: Please go to /site/},
+                ));
 	}
 
 	# Lookup / create Login

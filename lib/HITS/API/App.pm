@@ -47,14 +47,14 @@ post '/' => sub {
 				id, vendor_id, name, title, description, 
 				site_url, icon_url, 
 				tags, about, 
-				pub
+				pub, perm_template
 			)
 		VALUES
 			(
 				?, ?, ?, ?, ?,
 				?, ?,
 				?, ?,
-				?
+				?, ?
 			)
 	});
 
@@ -71,9 +71,14 @@ post '/' => sub {
 	#	icon			Optional URL for the Icon
 	#	public			Yes / No 
 
+	#use Data::Dumper;
+	#info(Dumper({ params }));
+
 	if (! params->{title}) {
+		# XXX Return error
 		return {
 			success => 0,
+			note => 'No title provided',
 		};
 	}
 
@@ -81,7 +86,7 @@ post '/' => sub {
 		$id, vars->{current}{vendor}{id}, params->{name}, params->{title}, params->{description},
 		params->{site_url}, params->{icon_url}, 
 		params->{tags}, params->{about},
-		params->{pub}
+		params->{pub}, params->{perm_template}
 	);
 
 	database->commit();

@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS app (
 	tags VARCHAR(2000),
 	icon_url VARCHAR(200),
 	pub VARCHAR(1),
+	perm_template VARCHAR(50),	-- Permissions template...
 	FOREIGN KEY (vendor_id) REFERENCES vendor(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

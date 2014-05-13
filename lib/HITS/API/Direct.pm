@@ -15,14 +15,28 @@ our $VERSION = '0.1';
 prefix '/direct';
 set serializer => 'JSON';
 
-get '/' => {
-	return {
-		'href' => 'TODO/:token',
-	};
+#get '/' => {
+#	return {
+#		'href' => 'TODO/:token',
+#	};
+#};
+
+sub getToken {
+	my ($token) = @_;
+	my $sth = database->prepare('SELECT * FROM school_app WHERE token = ?');
+	$sth->execute($token);
+	return $sth->fetchrow_hashref;
 }
 
-# List tables
+# List tables (TODO - remove security from here, only use token)
 get '/:token' => sub {
+	my $school_app = getToken(params->{token});
+	if (!$school_app) {
+		return status_not_found("token not found");
+	}
+	return {
+		success => 1,
+	};
 	my $ret = {};
 	foreach my $t (database('SIF')->tables) {
 		$t =~ s/^.+\.//;
@@ -37,7 +51,7 @@ get '/:token' => sub {
 	};
 };
 
-get '/:id' => sub {
+get '/:token/object/:table' => sub {
 	# TODO - Add some href links & allow configurable limits, filters and sorting
 	my $sth = database('SIF')->prepare('SELECT * FROM ' . params->{id} . ' LIMIT 250');
 	info('SELECT * FROM ' . params->{id} . ' LIMIT 250');

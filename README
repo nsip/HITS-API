@@ -96,3 +96,8 @@ JAVASCRIPT?
 	* School App
 		- List Applications marked Public (or my own)
 		- POST /school/:id/app app_id
+
+Alternative to documentation
+	Swagger
+	https://github.com/devo-ps/carte
+		http://devo.ps/carte/

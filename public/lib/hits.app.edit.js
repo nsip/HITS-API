@@ -45,6 +45,7 @@ $.fn.hits_app_edit = function () {
 				site_url: $form.find('input[name="site_url"]').val() + '',
 				about: $form.find('input[name="about"]').val() + '',
 				tags: $form.find('input[name="tags"]').val() + '',
+				perm_template: $form.find('select[name="perm_template"]').val() + '',
 			}).done(function(data) {
 				console.log(data);
 				alert("Created, new ID = " + data.id);

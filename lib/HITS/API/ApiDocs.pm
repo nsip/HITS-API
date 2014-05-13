@@ -1,0 +1,198 @@
+package HITS::API::ApiDocs;
+use perl5i::2;
+use Dancer ':syntax';
+use Dancer::Plugin::REST;
+use Dancer::Plugin::Database;
+use HITS::API::Plugin;
+
+=head1 NAME
+
+HITS::API::App - Applications list, and update
+
+=cut
+
+our $VERSION = '0.1';
+prefix '/api-docs';
+set serializer => 'JSON';
+
+get '/' => sub {
+	return {
+	  "apiVersion" => "1.0.0",
+	  "swaggerVersion" => "1.2",
+	  "apis" => [
+	    {
+	      "path" => "/app",
+	      "description" => "Applications",
+	    },
+	    {
+	      "path" => "/view",
+	      "description" => "View - direct access to SIS for testing",
+	    },
+	    {
+	      "path" => "/school",
+	      "description" => "Schools",
+	    },
+	    {
+	      "path" => "/vendor",
+	      "description" => "Vendors",
+	    },
+	    {
+	      "path" => "/tag",
+	      "description" => "Tagging",
+	    }
+	  ],
+	  "info" => {
+	    "title" => "HITS API",
+	    "description" => "Description TODO",
+	    "termsOfServiceUrl" => "/site/TODO",
+	    "contact" => "info\@nsip.edu.au",
+	    "license" => "License TODO",
+	    "licenseUrl" => "/site/TODO",
+	  }
+	};
+};
+
+sub makeOperation {
+	my ($method, $path, $summary, $params) = @_;
+	if (! $params) {
+		$params = [];
+		foreach my $key ($path =~ /{([^}]+)}/g) {
+			push @$params, {
+				"name" => $key,
+				"description" => "ID for $key",
+				"required" => true,
+				"type" => "string",
+				"paramType" => "path",
+			};
+		}
+	}
+	return {
+		method => $method,
+		summary=> $summary,
+		notes => 'TODO Notes',
+		type => 'XXX',
+		nickname => $method . '_' . $path,
+		authorizations => {},
+		parameters => $params // {},
+		responseMessages => [
+			{
+				code => 403,
+				message => 'Not logged in',
+			},
+		]
+	};
+}
+
+sub makeOperationPOST {
+	my ($path, $summary, $example) = @_;
+	my $params = [];
+	foreach my $key ($path =~ /{([^}]+)}/g) {
+		push @$params, {
+			"name" => $key,
+			"description" => "ID for $key",
+			"required" => true,
+			"type" => "string",
+			"paramType" => "path",
+		};
+	}
+	return {
+		method => 'POST',
+		summary=> $summary,
+		notes => 'TODO Notes',
+		type => 'XXX',
+		nickname => 'POST_' . $path,
+		authorizations => {},
+		parameters => [
+			@$params,
+			{
+				"name" => "body",
+				"description" => "Create object",
+				"required" => true,
+				"type" => $path,
+				defaultValue => ref($example) 
+					? to_json( $example, { ascii => 1, pretty => 1 } ) 
+					: $example,
+				"paramType" => "body"
+			}
+		],
+		responseMessages => [
+			{
+				code => 403,
+				message => 'Not logged in',
+			},
+		]
+	};
+}
+
+get '/:id' => sub {
+	my $api = params->{id};
+
+	my $apis = {
+		app => [
+			{
+				path => '/app',
+				operations => [
+					makeOperation('GET', 'app', 'List applications'),
+					makeOperationPOST('app', 'Create applications', {
+						name => "",
+						title => "",
+						description => "",
+						site_url => "",
+						icon_url => "",
+						tags => "",
+						about => "",
+						pub => "",
+						perm_template => ""
+					}),
+				],
+			},
+			{
+				path => '/app/{appId}',
+				operations => [
+					makeOperation('GET','app/{appId}', 'Get applications'),
+					makeOperation('DELETE','app/{appId}', 'Delete applications'),
+				],
+			},
+		],
+		vendor => [
+			{
+				path => '/vendor',
+				operations => [
+					makeOperation('GET', 'vendor', 'List vendors'),
+				],
+			},
+			{
+				path => '/vendor/{vendorId}',
+				operations => [
+					makeOperation('GET', 'vendor/{vendorId}', 'Get vendor'),
+				],
+			},
+			{
+				path => '/vendor/{vendorId}/info',
+				operations => [
+					makeOperation('GET', 'vendor/{vendorId}/info', 'Vendors meta information'),
+					makeOperationPOST('vendor/{vendorId}/info', 'Create vendor meta information', {
+						exampleOne => "anything",
+						exampleTwo => "you need to store",
+					}),
+				],
+			}
+		],
+	};
+
+	return {
+	  "apiVersion" => "0.0.1",
+	  "swaggerVersion" => "1.2",
+	  "basePath" => "http://hits.dev.nsip.edu.au/api",
+	  "resourcePath" => "/$api",
+	  "produces" => [
+	    "application/json"
+	  ],
+	  "authorizations" => {},
+	  "apis" => $apis->{$api},
+	  "models" => {},
+	};
+};
+
+true;
+

@@ -12,6 +12,8 @@ use HITS::API::Tag;
 use HITS::API::Vendor;
 use HITS::API::View;
 use HITS::API::School;
+use HITS::API::Direct;
+use HITS::API::ApiDocs;
 
 our $VERSION = '0.1';
 prefix undef;
