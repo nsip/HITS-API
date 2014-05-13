@@ -4,6 +4,7 @@ use Dancer ':syntax';
 use Dancer::Plugin::REST;
 use Dancer::Plugin::Database;
 use HITS::API::Plugin;
+use String::Random;
 
 =head1 NAME
 
@@ -130,15 +131,17 @@ get '/:id/app' => sub {
 };
 
 post '/:id/app' => sub {
+	my $r = String::Random->new;
 	my $sth = database->prepare(q{
 		INSERT INTO school_app 
-			(school_id, app_id)
+			(school_id, app_id, token)
 		VALUES 
-			(?, ?)
+			(?, ?, ?)
 	});
 	$sth->execute(
-		params->{id}, params->{app_id}
+		params->{id}, params->{app_id}, $r->randpattern('ssssssssss')
 	);
+	
 	database->commit();
 	return {
 		success => 1,
@@ -151,7 +154,8 @@ get '/:id/app/:appId' => sub {
 			app.id, app.name, app.title, app.description,
 			app.site_url, app.icon_url,
 			app.about, app.tags, app.pub,
-			app.vendor_id, vendor.name vendor_name
+			app.vendor_id, vendor.name vendor_name,
+			school_app.token
 		FROM
 			school_app, app, vendor
 		WHERE
@@ -169,11 +173,11 @@ get '/:id/app/:appId' => sub {
 	# SIF Authentication
 	$data->{sif} = {
 		url => 'http://hits.dev.nsip.edu.au:8080/SIF3InfraREST/hits/environments/environment',
-		solution_id =>  'HITS',
+		solution_id =>  'HITS',				# Harded coded
 		applicaiton_key => 'HITS',
 		password => 'hits@nsip',
-		user_token => params->{id},
-		instance_id => 'VendorXXX-AppYYY',
+		user_token => params->{id},			# Mapped to School RefID
+		instance_id => params->{appId},			# MApped to AppID which can be used to find Vendor Id
 		#		xml => qq{<environment xmlns="http://www.sifassociation.org/infrastructure/3.0.1">
 		#	<solutionId>HITS</solutionId>
 		#	<authenticationMethod>Basic</authenticationMethod>
@@ -196,7 +200,7 @@ get '/:id/app/:appId' => sub {
 
 	# DIRECT Authentication
 	$data->{test} = {
-		url => 'XXX',
+		url => 'http://hits.dev.nsip.edu.au/api/direct/' . $data->{token},
 	};
 
 	return $data;

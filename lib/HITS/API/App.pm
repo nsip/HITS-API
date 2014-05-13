@@ -143,6 +143,7 @@ del ':id' => sub {
 	};
 };
 
+# XXX might have to be done VIA School / App 
 get '/:id/sif' => sub {
 	# XXX SIF Example data
 	return {
