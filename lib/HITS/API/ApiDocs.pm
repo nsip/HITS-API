@@ -180,7 +180,13 @@ get '/:id' => sub {
 						exampleTwo => "you need to store",
 					}),
 				],
-			}
+			},
+			{
+				path => '/vendor/{vendorId}/app',
+				operations => [
+					makeOperation('GET', 'vendor/{vendorId}/app', 'Get vendor configured by school apps'),
+				],
+			},
 		],
 		view => [
 			{

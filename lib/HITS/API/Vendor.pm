@@ -111,6 +111,7 @@ post '/:id/info' => sub {
 		foreach my $key (keys %{params->{info}}) {
 			$delsth->execute('' . params->{id}, $key);
 			$inssth->execute('' . params->{id}, $key, '' . params->{info}{$key});
+			info("VENDOR INFO " . join(':', params->{id}, $key, '' . params->{info}{$key}));
 		}
 	}
 	database->commit();
@@ -130,7 +131,7 @@ get '/:id/app' => sub {
                         app.about, app.tags, app.pub,
                         app.vendor_id, vendor.name vendor_name,
                         concat('$base', school_app.school_id, '/app/', app.id) as href,
-			school.name as school_name
+			school.name as school_name, school.id as school_id
                 FROM
                         school_app, app, vendor, school
                 WHERE

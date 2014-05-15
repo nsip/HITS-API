@@ -12,6 +12,18 @@ $.fn.hits_vendor_info = function () {
 		$form.find('input').each(function(index,element) {
 			fields.push(element);
 		});
+		$form.find('textarea').each(function(index,element) {
+			fields.push(element);
+		});
+
+		$form.on('keydown', 'input', function (event) {
+		    if (event.which == 13) {
+			event.preventDefault();
+			// var $this = $(event.target);
+			// var index = parseFloat($this.attr('data-index'));
+			// $('[data-index="' + (index + 1).toString() + '"]').focus();
+		    }
+		});
 		$form.hide();
 
 		// Load existing data
