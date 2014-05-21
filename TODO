@@ -1,6 +1,32 @@
 Move API Docs to "Developer Documentation"
 	* API Docs and SIF Docs under that
 
+
+XXX
+	change direct to token ! (e.g. /api/token/:token/object/class
+
+EduTech Demo Works
+	Security Template
+		- Teacher Only - School info and Teacher personal details
+		- Teacher & Class
+		- Teacher & Class & Students
+		- Teacher & Students
+
+	First release permissions templates
+		- Anonymous
+		- Safe online
+		- Admin +
+
+	WHO ???
+		- Teachers
+		- Students & Teachers
+		- Classes, Students, Teachers
+
+	Installed / Available Apps
+		- Icons / Logos
+		- VIEW = Add/Remove button and Information
+			Could we show actual data?
+
 Add SIS Viewer
 
 Add Vocab

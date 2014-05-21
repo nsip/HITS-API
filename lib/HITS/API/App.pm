@@ -4,6 +4,8 @@ use Dancer ':syntax';
 use Dancer::Plugin::REST;
 use Dancer::Plugin::Database;
 use HITS::API::Plugin;
+use Dancer::Plugin::Thumbnail;
+use LWP;
 
 =head1 NAME
 
@@ -139,13 +141,33 @@ put '/:id' => sub {
 };
 
 # Delete existing (XXX security?)
-del ':id' => sub {
+del '/:id' => sub {
 	my $sth = database->prepare(q{DELETE FROM app WHERE id = ? AND vendor_id = ?});
 	$sth->execute(params->{id}, vars->{current}{vendor}{id});
 	return {
 		success => 1,
 		id => params->{id},
 	};
+};
+
+get '/:id/icon' => sub {
+	my $sth = database->prepare(qq{
+		SELECT
+			*
+		FROM
+			app
+		WHERE
+			id = ?
+	});
+	$sth->execute(params->{id});
+	my $app = $sth->fetchrow_hashref;
+	status_not_found("app not found") unless ($app);
+
+	# Download URL - when?
+
+	# Resize - cache?
+
+	resize '/tmp/logo.png' => { w => '80' };
 };
 
 # XXX might have to be done VIA School / App 
