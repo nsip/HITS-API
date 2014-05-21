@@ -11,6 +11,21 @@
 
 */
 
+hits_school_app_icon_render = function($this, school_id, data) {
+	$.each( data.app, function(i, v) {
+		$this.append('<div style="float: left; padding: 5px; border: 1px solid black;">'
+			+ '<a href="school-apps-view?school_id=' + school_id + '&app_id=' + v.id + '">'
+			+ '<img src="/api/app/' + v.id + '/icon" />'
+			+ '<br />'
+			+ '<span>' + v.title + '</span>'
+			+ '</a>'
+			+ '</div>'
+			// + '<td><a href="school-app-view?school_id=' + school_id + '&app_id=' + v.id + '">View</a></td>'
+		);
+	});
+	$this.append('<div style="clear:both">&nbsp;</div>');
+};
+
 $.fn.hits_school_app_icon_active = function () {
         return this.each(function () {
 		var school_id = $.url().param('school_id');
@@ -21,17 +36,25 @@ $.fn.hits_school_app_icon_active = function () {
                 var $this = $(this);
 		hits_api.rest().school.app.read(school_id)
 		.done(function(data) {
-			$.each( data.app, function(i, v) {
-				$this.append('<div>'
-					+ '<a href="school-apps-view?school_id=' + school_id + '&app_id=' + v.id + '">'
-					+ '<img src="/api/app/' + v.id + '/icon" />'
-					+ '<br />'
-					+ '<span>' + v.title + '</span>'
-					+ '</a>'
-					+ '</div>'
-					// + '<td><a href="school-app-view?school_id=' + school_id + '&app_id=' + v.id + '">View</a></td>'
-				);
-			});
+			hits_school_app_icon_render($this, school_id, data);
+		})
+		.fail(function() {
+			alert("Failed");
+		});
+	});
+};
+
+$.fn.hits_school_app_icon_available = function () {
+        return this.each(function () {
+		var school_id = $.url().param('school_id');
+		if (! school_id) {
+			alert("Must select a school ID first");
+			return;
+		}
+                var $this = $(this);
+		hits_api.rest().app.read()
+		.done(function(data) {
+			hits_school_app_icon_render($this, school_id, data);
 		})
 		.fail(function() {
 			alert("Failed");
@@ -55,7 +78,7 @@ $.fn.hits_school_app_list = function () {
 					+ '<tr>'
 					+ '<td>' + v.id + '</td>'
 					+ '<td>' + v.name + '</td>'
-					+ '<td><a href="school-app-view?school_id=' + school_id + '&app_id=' + v.id + '">View</a></td>'
+					+ '<td><a href="school-apps-view?school_id=' + school_id + '&app_id=' + v.id + '">View</a></td>'
 					+ '</tr>'
 				);
 			});
@@ -66,6 +89,17 @@ $.fn.hits_school_app_list = function () {
 	});
 };
                 
+var hits_school_app_add = function(school_id, app_id) {
+	hits_api.rest().school.app.create(school_id, { app_id: app_id })
+	.done(function() {
+		alert("Added - reloading list");
+		location.reload();
+	})
+	.fail(function() {
+		alert("Failed to add application");
+	});
+};
+
 $.fn.hits_school_app_add = function () {
         return this.each(function () {
 		var school_id = $.url().param('school_id');
@@ -91,14 +125,7 @@ $.fn.hits_school_app_add = function () {
 
 		$this.submit(function(event) {
 			event.preventDefault();
-			hits_api.rest().school.app.create(school_id, { app_id: $selectapp.val() })
-			.done(function() {
-				alert("Added - reloading list");
-				location.reload();
-			})
-			.fail(function() {
-				alert("Failed to add application");
-			});
+			hits_school_app_add(school_id, $selectapp.val());
 		});
 	});
 };
@@ -114,12 +141,37 @@ $.fn.hits_school_app_view = function () {
                 var $this = $(this);
 		hits_api.rest().school.app.read(school_id, app_id)
 		.done(function(data) {
+			// Map any fields
 			$this.find('.field').each(function() {
 				var fieldstr = $(this).attr("dataField");
 				$(this).html( data[fieldstr] );
 			});
 
+			// Add icon
 			$this.find('.image').html( '<img src="/api/app/' + app_id + '/icon" />');
+
+			// ACTIVE / DEACTIVATE Buttons
+			if (data.status == 'active') {
+				$this.find('.button').html("De-Activate");
+			}
+			else {
+				$this.find('.button').html("Activate");
+			}
+			$this.find('.button').click(function() {
+				if (data.status == 'active') {
+					alert("Sorry de-activation not yet supported");
+				}
+				else {
+					hits_school_app_add(school_id, app_id);
+				}
+			});
+
+			$this.find('.back').click(function(event) {
+				event.preventDefault();
+				var url = $(this).attr('href');
+				window.location = url + '?school_id=' + school_id;
+			});
+			
 		})
 		.fail(function() {
 			alert("Failed");
