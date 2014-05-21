@@ -15,11 +15,13 @@ $.fn.hits_app_list = function () {
 				$.each( data.app, function(i, v) {
 					$tbody.append(''
 						+ '<tr>'
-						+ '<td>' + v.id + '</td>'
+						// + '<td>' + v.id + '</td>'
+						+ '<td><img src="/api/app/' + v.id + '/icon" /></td>'
 						+ '<td>' + v.name + '</td>'
 						+ '<td>' + v.title + '</td>'
 						+ '<td>' + v.tags + '</td>'
 						+ '<td>' + v.pub + '</td>'
+						// XXX Add edit link - Page name?
 						+ '</tr>'
 					);
 				});

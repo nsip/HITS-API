@@ -5,7 +5,7 @@ use Dancer::Plugin::REST;
 use Dancer::Plugin::Database;
 use HITS::API::Plugin;
 use Dancer::Plugin::Thumbnail;
-use LWP;
+use LWP::Simple ();
 
 =head1 NAME
 
@@ -164,10 +164,21 @@ get '/:id/icon' => sub {
 	status_not_found("app not found") unless ($app);
 
 	# Download URL - when?
-
-	# Resize - cache?
-
-	resize '/tmp/logo.png' => { w => '80' };
+	eval {
+		info("Downloading $app->{icon_url}");
+		my $code = LWP::Simple::getstore($app->{icon_url}, "/tmp/image.$$.png");
+		info($code);
+		die "No valid file - $code" unless ($code =~ /^2/);
+	};
+	if ($@) {
+		# Resize - cache?
+		info("Loading default logo");
+		resize "/var/lib/hits/icons/default/icon.png" => { w => '80' };
+	}
+	else {
+		# Resize - cache?
+		resize "/tmp/image.$$.png" => { w => '80' };
+	}
 };
 
 # XXX might have to be done VIA School / App 
