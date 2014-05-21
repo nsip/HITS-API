@@ -29,6 +29,7 @@ sub getToken {
 }
 
 # List tables (TODO - remove security from here, only use token)
+# XXX Allow trailing "/"
 get '/:token' => sub {
 	my $school_app = getToken(params->{token});
 	if (!$school_app) {
@@ -51,6 +52,11 @@ get '/:token' => sub {
 			description => '',
 			href => "$base/teacher",
 		},
+		class => {
+			title => 'Classes',
+			description => '',
+			href => "$base/class",
+		},
 	};
 };
 
@@ -62,25 +68,54 @@ get '/:token/object/:table' => sub {
 
 	my $map = {
 		school => q{
-			SELECT RefId as id, SchoolName as title
-			FROM SchoolInfo
-			WHERE RefId = ?
-			ORDER BY RefId
-			LIMIT 100
+			SELECT 
+				RefId as id, SchoolName as title
+			FROM 
+				SchoolInfo
+			WHERE 
+				RefId = ?
+			ORDER BY 
+				RefId
+			LIMIT 1000
 		},
 		student => q{
-			SELECT RefId as id, GivenName as first_name, FamilyName as last_name
-			FROM StudentPersonal
-			WHERE SchoolInfo_RefId = ?
-			ORDER BY RefId
-			LIMIT 100
+			SELECT 
+				RefId as id, GivenName as first_name, FamilyName as last_name
+			FROM 
+				StudentPersonal
+			WHERE 
+				SchoolInfo_RefId = ?
+			ORDER BY 
+				RefId
+			LIMIT 1000
 		},
 		teacher => q{
-			SELECT RefId as id, GivenName as first_name, FamilyName as last_name
-			FROM StaffPersonal
-			WHERE SchoolInfo_RefId = ?
-			ORDER BY RefId
-			LIMIT 100
+			SELECT 
+				RefId as id, GivenName as first_name, FamilyName as last_name
+			FROM 
+				StaffPersonal
+			WHERE 
+				SchoolInfo_RefId = ?
+			ORDER BY 
+				RefId
+			LIMIT 1000
+		},
+		class => q{
+			SELECT 
+				TeachingGroup.RefId as id,
+				TeachingGroup.ShortName as name,
+				TeachingGroup.LongName as title,
+				TeachingGroup.LocalId as localid,
+				TeachingGroup.SchoolYear as year,
+				SchoolInfo.SchoolName as school_title
+			FROM 
+				TeachingGroup, SchoolInfo
+			WHERE
+				TeachingGroup.SchoolInfo_RefId = ?
+				AND TeachingGroup.SchoolInfo_RefId = SchoolInfo.RefId
+			ORDER BY 
+				id
+			LIMIT 1000
 		},
 	};
 
@@ -89,6 +124,73 @@ get '/:token/object/:table' => sub {
 	return {
 		data => $sth->fetchall_arrayref({}),
 	};
+};
+
+get '/:token/object/class/:id' => sub {
+	my $school_app = getToken(params->{token});
+	if (!$school_app) {
+		return status_not_found("token not found");
+	}
+
+	my $sth = database('SIF')->prepare(q{
+		SELECT 
+			TeachingGroup.RefId as id,
+			TeachingGroup.ShortName as name,
+			TeachingGroup.LongName as title,
+			TeachingGroup.LocalId as localid,
+			TeachingGroup.SchoolYear as year,
+			SchoolInfo.SchoolName as school_title
+		FROM 
+			TeachingGroup, SchoolInfo
+		WHERE
+			TeachingGroup.SchoolInfo_RefId = ?
+			AND TeachingGroup.RefId = ?
+			AND TeachingGroup.SchoolInfo_RefId = SchoolInfo.RefId
+		ORDER BY 
+			id
+		LIMIT 1000
+	});
+	$sth->execute($school_app->{school_id}, params->{id});
+	my $data = {
+		info => $sth->fetchrow_hashref,
+		students => [],
+		teachers => [],
+	};
+	return status_not_found("teaching group not found") unless ($data->{info});
+
+	# Students
+	$sth = database('SIF')->prepare(q{
+		SELECT 
+			StudentPersonal.RefId as id, 
+			StudentPersonal.GivenName as first_name, StudentPersonal.FamilyName as last_name
+		FROM 
+			StudentPersonal, TeachingGroup_Student
+		WHERE
+			TeachingGroup_Student.TeachingGroup_RefId = ?
+			AND TeachingGroup_Student.StudentPersonal_RefId = StudentPersonal.RefId
+	});
+	$sth->execute( $data->{info}{id} );
+	while (my $ref = $sth->fetchrow_hashref) {
+		push @{$data->{students}}, { %$ref };
+	}
+
+	# Teachers
+	$sth = database('SIF')->prepare(q{
+		SELECT 
+			StaffPersonal.RefId as id, 
+			StaffPersonal.GivenName as first_name, StaffPersonal.FamilyName as last_name
+		FROM 
+			StaffPersonal, TeachingGroup_Teacher
+		WHERE
+			TeachingGroup_Teacher.TeachingGroup_RefId = ?
+			AND TeachingGroup_Teacher.StaffPersonal_RefId = StaffPersonal.RefId
+	});
+	$sth->execute( $data->{info}{id} );
+	while (my $ref = $sth->fetchrow_hashref) {
+		push @{$data->{teachers}}, { %$ref };
+	}
+
+	return $data;
 };
 
 true;
