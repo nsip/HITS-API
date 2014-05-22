@@ -9,7 +9,7 @@ my $config = YAML::LoadFile($ENV{HOME} . "/.nsip_sif_data");
 
 # Connect to database
 my $dbh = DBI->connect(
-        'dbi:mysqlPP:database=hits;host=sifau.cspvdo7mmaoe.ap-southeast-2.rds.amazonaws.com',
+        'dbi:mysql:database=hits;host=sifau.cspvdo7mmaoe.ap-southeast-2.rds.amazonaws.com',
         $config->{mysql_user}, 
         $config->{mysql_password},
         {RaiseError => 1, AutoCommit => 1}
