@@ -7,6 +7,10 @@ use HTML::Entities;
 
 my $config = YAML::LoadFile($ENV{HOME} . "/.nsip_sif_data");
 
+print "Content-type: application/vnd.ms-excel\n";
+print "Content-Disposition: attachment; filename=$filename\n";
+print "\n";
+
 # Connect to database
 my $dbh = DBI->connect(
         'dbi:mysql:database=hits;host=sifau.cspvdo7mmaoe.ap-southeast-2.rds.amazonaws.com',
@@ -16,10 +20,10 @@ my $dbh = DBI->connect(
 );
 
 # Create a new Excel workbook
-my $workbook = Spreadsheet::WriteExcel->new('out.xls');
+my $workbook = Spreadsheet::WriteExcel->new(\*STDOUT);
 $worksheet = $workbook->add_worksheet();
-open (my $html, "> out.html");
-print $html qq{<html><body><table border="1">\n};
+#open (my $html, "> out.html");
+#print $html qq{<html><body><table border="1">\n};
 
 # FIELDS
 my $sth = $dbh->prepare(q{
@@ -75,5 +79,5 @@ while (my $ref = $sth->fetchrow_hashref) {
 }
 
 # decode_entities($a);
-print $html q{</body></html>};
+#print $html q{</body></html>};
 
