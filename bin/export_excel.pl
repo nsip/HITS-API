@@ -1,14 +1,16 @@
 #!/usr/bin/perl
+use warnings;
+use strict;
 use DBI;
 use YAML;
 use Spreadsheet::WriteExcel;
 use Data::Dumper;
 use HTML::Entities;
 
-my $config = YAML::LoadFile($ENV{HOME} . "/.nsip_sif_data");
+my $config = YAML::LoadFile("/home/scottp/.nsip_sif_data");
 
 print "Content-type: application/vnd.ms-excel\n";
-print "Content-Disposition: attachment; filename=$filename\n";
+print "Content-Disposition: attachment; filename=data.xls\n";
 print "\n";
 
 # Connect to database
@@ -21,7 +23,7 @@ my $dbh = DBI->connect(
 
 # Create a new Excel workbook
 my $workbook = Spreadsheet::WriteExcel->new(\*STDOUT);
-$worksheet = $workbook->add_worksheet();
+my $worksheet = $workbook->add_worksheet();
 #open (my $html, "> out.html");
 #print $html qq{<html><body><table border="1">\n};
 
