@@ -33,15 +33,18 @@ my $sth = $dbh->prepare(q{
 		field
 	FROM
 		vendor_info
+	ORDER BY
+		field
 });
 $sth->execute();
 my $fields = {};
 my $count = 0;
 $worksheet->write(0, 0, 'vendor_id');
+$worksheet->write(0, 1, 'vendor_name');
 while (my $ref = $sth->fetchrow_hashref) {
 	$count++;
 	$fields->{$ref->{field}} = $count;
-	$worksheet->write(0, $count, $ref->{field});
+	$worksheet->write(0, $count + 1, $ref->{field});
 }
 
 # Vendors
