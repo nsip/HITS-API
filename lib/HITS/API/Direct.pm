@@ -196,4 +196,28 @@ get '/:token/object/class/:id' => sub {
 	return $data;
 };
 
+sub client {
+        our $client;
+        # NOTE: Currently alwyas expiring... (inefficient)
+        $client = undef;
+        if (!defined $client) {
+                $client = SIF::REST->new({
+                        endpoint => 'http://rest3api.sifassociation.org/api',
+                        # TODO Make this config, or even allow as input
+                        # solutionId => 'auTestSolution',
+                });
+                $client->setupRest();
+        }
+        return $client;
+}
+
+# XXX get, any post ?
+get qr{/([^/]+)/sifproxy/(.*)} => sub {
+        my ($token, $rest) = splat;
+	return {
+		token => $token,
+		rest => $rest,
+	};
+};
+
 true;
