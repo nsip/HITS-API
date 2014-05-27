@@ -91,7 +91,7 @@ get '/:token/object/:table' => sub {
 		},
 		teacher => q{
 			SELECT 
-				RefId as id, GivenName as first_name, FamilyName as last_name
+				RefId as id, GivenName as first_name, FamilyName as last_name, Email as email, Salutation as salutation
 			FROM 
 				StaffPersonal
 			WHERE 
@@ -107,6 +107,7 @@ get '/:token/object/:table' => sub {
 				TeachingGroup.LongName as title,
 				TeachingGroup.LocalId as localid,
 				TeachingGroup.SchoolYear as year,
+				TeachingGroup.KLA as kla,
 				SchoolInfo.SchoolName as school_title
 			FROM 
 				TeachingGroup, SchoolInfo
@@ -139,6 +140,7 @@ get '/:token/object/class/:id' => sub {
 			TeachingGroup.LongName as title,
 			TeachingGroup.LocalId as localid,
 			TeachingGroup.SchoolYear as year,
+			TeachingGroup.KLA as kla,
 			SchoolInfo.SchoolName as school_title
 		FROM 
 			TeachingGroup, SchoolInfo
@@ -178,7 +180,8 @@ get '/:token/object/class/:id' => sub {
 	$sth = database('SIF')->prepare(q{
 		SELECT 
 			StaffPersonal.RefId as id, 
-			StaffPersonal.GivenName as first_name, StaffPersonal.FamilyName as last_name
+			StaffPersonal.GivenName as first_name, StaffPersonal.FamilyName as last_name,
+			StaffPersonal.Salutation as salutation, StaffPersonal.Email as email
 		FROM 
 			StaffPersonal, TeachingGroup_Teacher
 		WHERE

@@ -138,8 +138,10 @@ post '/:id/app' => sub {
 		VALUES 
 			(?, ?, ?)
 	});
+	my $token = $r->randpattern('ssssssssss');
+	$token =~ s/[^A-Za-z0-9]//g;
 	$sth->execute(
-		params->{id}, params->{app_id}, $r->randpattern('ssssssssss')
+		params->{id}, params->{app_id}, $token
 	);
 	
 	database->commit();
