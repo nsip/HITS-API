@@ -1,5 +1,5 @@
 build:
-	cd public/lib; cat start.js jquery.rest.js jquery-ui.js purl.js hits.api.js hits.app.edit.js hits.app.list.js hits.config.js hits.school.app.js hits.tag.todo.js hits.school.list.js hits.vendor.info.js hits.vendor.school.app.js hits.school.info.js end.js > all.js
+	cd public/lib; cat start.js jquery.rest.js jquery-ui.js jquery.loadmask.js purl.js hits.api.js hits.app.edit.js hits.app.list.js hits.config.js hits.school.app.js hits.tag.todo.js hits.school.list.js hits.vendor.info.js hits.vendor.school.app.js hits.school.info.js end.js > all.js
 	cp apidoc/* /var/www/apidoc/
 
 restart: build
