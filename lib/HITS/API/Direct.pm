@@ -25,12 +25,22 @@ sub getToken {
 	my ($token) = @_;
 	my $sth = database->prepare('SELECT * FROM school_app WHERE token = ?');
 	$sth->execute($token);
-	return $sth->fetchrow_hashref;
+	my $ref = $sth->fetchrow_hashref;
+	info("DEBUG $token checked");
+	return $ref;
 }
+
+#options '/:token' => sub {
+#	my $school_app = getToken(params->{token});
+#	if (!$school_app) {
+#		return status_not_found("token not found");
+#	}
+#	return {};
+#};
 
 # List tables (TODO - remove security from here, only use token)
 # XXX Allow trailing "/"
-get '/:token' => sub {
+any '/:token' => sub {
 	my $school_app = getToken(params->{token});
 	if (!$school_app) {
 		return status_not_found("token not found");
@@ -60,7 +70,7 @@ get '/:token' => sub {
 	};
 };
 
-get '/:token/object/:table' => sub {
+any '/:token/object/:table' => sub {
 	my $school_app = getToken(params->{token});
 	if (!$school_app) {
 		return status_not_found("token not found");
@@ -132,7 +142,7 @@ get '/:token/object/:table' => sub {
 	};
 };
 
-get '/:token/object/class/:id' => sub {
+any '/:token/object/class/:id' => sub {
 	my $school_app = getToken(params->{token});
 	if (!$school_app) {
 		return status_not_found("token not found");
@@ -217,7 +227,7 @@ sub client {
 }
 
 # XXX get, any post ?
-get qr{/([^/]+)/sifproxy/(.*)} => sub {
+any qr{/([^/]+)/sifproxy/(.*)} => sub {
         my ($token, $rest) = splat;
 	return {
 		token => $token,
