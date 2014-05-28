@@ -21,6 +21,7 @@ $.fn.hits_app_list = function () {
 						+ '<td>' + v.title + '</td>'
 						+ '<td>' + v.tags + '</td>'
 						+ '<td>' + v.pub + '</td>'
+						+ '<td><a href="school_scenario_step1?app_id=' + v.id + '">edit</a></td>'
 						// XXX Add edit link - Page name?
 						+ '</tr>'
 					);

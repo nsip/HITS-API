@@ -7,6 +7,10 @@ $.fn.hits_app_edit = function () {
 		var $this = $(this);
 
 		var existing_id = $.url().param('app_id');
+		console.log(existing_id);
+		if (existing_id) {
+			$this.mask("Loading...");
+		}
 
 		var $form = $this.find('form');
 		if (! $form.length) {
@@ -64,7 +68,7 @@ $.fn.hits_app_edit = function () {
 					post_data
 				).done(function(data) {
 					console.log(data);
-					alert("Existing entry udpated, ID = " + data.id);
+					alert("Existing entry udpated");
 				}).fail(function(data) {
 					console.log(data);
 					alert("Failed Update");
@@ -79,12 +83,31 @@ $.fn.hits_app_edit = function () {
 				}).fail(function(data) {
 					console.log(data);
 					alert("Failed");
+				});
 			}
 			return false;
 		});
 
 		if (existing_id) {
 			// Loading...
+			hits_api.rest().app.read(existing_id)
+			.done(function(data) {
+				if (!data || !data.app) {
+					alert("No data for app_id");
+				}
+				else {
+					console.log(data);
+					$.each(data.app, function(name, val) {
+						var el = $form.find('input[name="' + name + '"]');
+						if (el) 
+							el.val(val);
+					});
+					$this.unmask();
+				}
+			})
+			.fail(function() {
+				alert("Failed to load app_id");
+			});
 		}
 	});
 };

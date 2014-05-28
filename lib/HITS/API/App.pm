@@ -120,19 +120,22 @@ get '/:id' => sub {
 # Update existing
 put '/:id' => sub {
 	my $data = {};
-	foreach my $key (qw/name title description site_url about tags icon public/) {
+	foreach my $key (qw/name title description site_url about tags icon pub/) {
 		if (params->{$key}) {
 			$data->{$key} = params->{$key};
 		}
 	}
 	if (scalar (keys %$data)) {
+		use Data::Dumper;
+		print STDERR Dumper($data);
+		print STDERR join(",", params->{id}, vars->{current}{vendor}{id}) . "\n";
 		my $sth = database->prepare(q{
 			UPDATE app
 			SET } . join(", ", map { "$_ = ?" } sort keys %$data) . q{
 			WHERE id = ? AND vendor_id = ?
 		});
 		$sth->execute(
-			map { $data->{$_} } sort keys %$data,
+			(map { $data->{$_} } sort keys %$data),
 			params->{id}, vars->{current}{vendor}{id}
 		);
 	}
