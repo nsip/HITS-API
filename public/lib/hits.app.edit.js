@@ -6,6 +6,8 @@ $.fn.hits_app_edit = function () {
 	return this.each(function () {
 		var $this = $(this);
 
+		var existing_id = $.url().param('app_id');
+
 		var $form = $this.find('form');
 		if (! $form.length) {
 			console.log("Creating form");
@@ -43,7 +45,9 @@ $.fn.hits_app_edit = function () {
 		console.log("Adding submit");
 		$form.find('button[value="submit"]').click(function(event) {
 			event.preventDefault();
-			hits_api.rest().app.create({
+
+			// Strip any not existing (ie only post what is in the form !)
+			var post_data = {
 				name: $form.find('input[name="name"]').val() + '',
 				title: $form.find('input[name="title"]').val() + '',
 				description: $form.find('input[name="description"]').val() + '',
@@ -52,16 +56,36 @@ $.fn.hits_app_edit = function () {
 				tags: $form.find('input[name="tags"]').val() + '',
 				perm_template: $form.find('select[name="perm_template"]').val() + '',
 				icon_url: $form.find('input[name="icon_url"]').val() + '',
-				public: $form.find('input[name="public"]').val() + '',
-			}).done(function(data) {
-				console.log(data);
-				alert("Created, new ID = " + data.id);
-			}).fail(function(data) {
-				console.log(data);
-				alert("Failed");
-			});
+				public: $form.find('input[name="public"]').val() + ''
+			};
+
+			if (existing_id) {
+				hits_api.rest().app.update(existing_id,
+					post_data
+				).done(function(data) {
+					console.log(data);
+					alert("Existing entry udpated, ID = " + data.id);
+				}).fail(function(data) {
+					console.log(data);
+					alert("Failed Update");
+				});
+			}
+			else {
+				hits_api.rest().app.create(
+					post_data
+				).done(function(data) {
+					console.log(data);
+					alert("Created, new ID = " + data.id);
+				}).fail(function(data) {
+					console.log(data);
+					alert("Failed");
+			}
 			return false;
 		});
+
+		if (existing_id) {
+			// Loading...
+		}
 	});
 };
 
