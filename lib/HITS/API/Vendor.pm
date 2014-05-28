@@ -135,7 +135,7 @@ get '/:id/app' => sub {
                 FROM
                         school_app, app, vendor, school
                 WHERE
-			vendor.id = ?
+			(vendor.id = ? OR app.pub = 'y')
                         AND app.id = school_app.app_id
                         AND vendor.id = app.vendor_id
 			AND school.id = school_app.school_id

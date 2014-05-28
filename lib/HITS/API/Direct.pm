@@ -66,6 +66,8 @@ get '/:token/object/:table' => sub {
 		return status_not_found("token not found");
 	}
 
+	my $base = uri_for('direct/' . params->{token}) . "/object/" . params->{table} . '/';
+
 	my $map = {
 		school => q{
 			SELECT 
@@ -80,7 +82,9 @@ get '/:token/object/:table' => sub {
 		},
 		student => q{
 			SELECT 
-				RefId as id, GivenName as first_name, FamilyName as last_name
+				RefId as id, GivenName as first_name, FamilyName as last_name,
+				Sex as sex, YearLevel as yearlevel, BirthDate as dob,
+				IndigenousStatus as indigenous_status, Email as email
 			FROM 
 				StudentPersonal
 			WHERE 
@@ -100,7 +104,7 @@ get '/:token/object/:table' => sub {
 				RefId
 			LIMIT 1000
 		},
-		class => q{
+		class => qq{
 			SELECT 
 				TeachingGroup.RefId as id,
 				TeachingGroup.ShortName as name,
@@ -108,7 +112,8 @@ get '/:token/object/:table' => sub {
 				TeachingGroup.LocalId as localid,
 				TeachingGroup.SchoolYear as year,
 				TeachingGroup.KLA as kla,
-				SchoolInfo.SchoolName as school_title
+				SchoolInfo.SchoolName as school_title,
+				concat('$base', TeachingGroup.RefId) as href
 			FROM 
 				TeachingGroup, SchoolInfo
 			WHERE
