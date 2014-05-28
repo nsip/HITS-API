@@ -1,0 +1,39 @@
+.page-header {
+	color: red;
+}
+.jumbotron.mini {
+  padding: 10px !important;
+}
+.jumbotron.mini h1 {
+  font-size: 2em !important;
+}
+.hits-app-icon {
+  float: left;
+  padding: 0;
+  width: 100px;
+  margin: 10px 20px 10px 0;
+  background: #333;
+}
+.hits-app-icon span {
+  font-size: 0.9em;
+  margin: 5px 10px;
+  display: block;
+}
+.hits-app-icon img {
+  width: 100px;
+  height: 100px;
+}
+
+.hits-app-icon a, .hits-app-icon a:visited {
+  color: #ccc;
+}
+.hits-app-icon a:hover, .hits-app-icon a:active, .hits-app-icon a:focus {
+  color: #fff;
+}
+.clear {
+  clear: both;
+}
+.hits-school-app-view .image {
+  float: right;
+  margin: 0 0 20px 20px;
+}

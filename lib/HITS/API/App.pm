@@ -6,6 +6,7 @@ use Dancer::Plugin::Database;
 use HITS::API::Plugin;
 use Dancer::Plugin::Thumbnail;
 use LWP::Simple ();
+use File::Type;
 
 =head1 NAME
 
@@ -87,7 +88,8 @@ post '/' => sub {
 	$sth->execute(
 		$id, vars->{current}{vendor}{id}, params->{name}, params->{title}, params->{description},
 		params->{site_url}, params->{icon_url}, 
-		params->{tags}, params->{about},
+		params->{tags}, params->{about} || params->{about_url},
+		# XXX coulb be public not pub
 		params->{pub}, params->{perm_template}
 	);
 
@@ -166,7 +168,7 @@ get '/:id/icon' => sub {
 	# Download URL - when?
 	eval {
 		info("Downloading $app->{icon_url}");
-		my $code = LWP::Simple::getstore($app->{icon_url}, "/tmp/image.$$.png");
+		my $code = LWP::Simple::getstore($app->{icon_url}, "/tmp/image.$$");
 		info($code);
 		die "No valid file - $code" unless ($code =~ /^2/);
 	};
@@ -177,7 +179,22 @@ get '/:id/icon' => sub {
 	}
 	else {
 		# Resize - cache?
-		resize "/tmp/image.$$.png" => { w => '80' };
+		info("Resizing");
+
+		my $ft = File::Type->new();
+		my $mt = $ft->mime_type("/tmp/image.$$");
+		my $ext = "";
+		if ($mt =~ /png/) {
+			$ext = 'png';
+		}
+		elsif ( ($mt =~ /jpg/) || ($mt =~ /jpeg/) ) {
+			$ext = 'jpg';
+		}
+		elsif ($mt =~ /gif/) {
+			$ext = 'gif';
+		}
+		rename "/tmp/image.$$", "/tmp/image.$$.$ext";
+		resize "/tmp/image.$$.$ext" => { w => '80' };
 	}
 };
 

@@ -13,7 +13,8 @@
 
 hits_school_app_icon_render = function($this, school_id, data) {
 	$.each( data.app, function(i, v) {
-		$this.append('<div style="float: left; padding: 5px; border: 1px solid black;">'
+		$this.append('<div class="hits-app-icon">'
+				// style="float: left; padding: 5px; border: 1px solid black;">'
 			+ '<a href="school-apps-view?school_id=' + school_id + '&app_id=' + v.id + '">'
 			+ '<img src="/api/app/' + v.id + '/icon" />'
 			+ '<br />'
@@ -23,7 +24,7 @@ hits_school_app_icon_render = function($this, school_id, data) {
 			// + '<td><a href="school-app-view?school_id=' + school_id + '&app_id=' + v.id + '">View</a></td>'
 		);
 	});
-	$this.append('<div style="clear:both">&nbsp;</div>');
+	$this.append('<div class="hits-app-icon-end">&nbsp;</div>');
 };
 
 $.fn.hits_school_app_icon_active = function () {

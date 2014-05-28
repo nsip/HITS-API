@@ -8,6 +8,7 @@ $.fn.hits_app_edit = function () {
 
 		var $form = $this.find('form');
 		if (! $form.length) {
+			console.log("Creating form");
 			$this.append('<form></form>');
 			$form = $this.find('form');
 
@@ -30,6 +31,9 @@ $.fn.hits_app_edit = function () {
 			$form.append('<input type="submit" name="clear" value="Clear">');
 			$form.append('<button type="submit" name="submit" value="submit">Save</button>');
 		}
+		else {
+			console.log("Existing form");
+		}
 
 		$form.find('input[name="clear"]').click(function() {
 			alert("Clearing");
@@ -37,18 +41,24 @@ $.fn.hits_app_edit = function () {
 		});
 
 		console.log("Adding submit");
-		$form.find('button[value="submit"]').click(function() {
+		$form.find('button[value="submit"]').click(function(event) {
+			event.preventDefault();
 			hits_api.rest().app.create({
 				name: $form.find('input[name="name"]').val() + '',
 				title: $form.find('input[name="title"]').val() + '',
 				description: $form.find('input[name="description"]').val() + '',
 				site_url: $form.find('input[name="site_url"]').val() + '',
-				about: $form.find('input[name="about"]').val() + '',
+				about_url: $form.find('input[name="about_url"]').val() + '',
 				tags: $form.find('input[name="tags"]').val() + '',
 				perm_template: $form.find('select[name="perm_template"]').val() + '',
+				icon_url: $form.find('input[name="icon_url"]').val() + '',
+				public: $form.find('input[name="public"]').val() + '',
 			}).done(function(data) {
 				console.log(data);
 				alert("Created, new ID = " + data.id);
+			}).fail(function(data) {
+				console.log(data);
+				alert("Failed");
 			});
 			return false;
 		});

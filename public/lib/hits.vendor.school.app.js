@@ -16,6 +16,7 @@ $.fn.hits_vendor_school_app_list = function () {
 					+ '<tr>'
 					// + '<td>' + v.id + '</td>'
 					+ '<td><img src="/api/app/' + v.id + '/icon" /></td>'
+					+ '<td>' + v.vendor_name + '</td>'
 					+ '<td>' + v.name + '</td>'
 					+ '<td>' + v.title + '</td>'
 					+ '<td>' + v.school_name + '</td>'

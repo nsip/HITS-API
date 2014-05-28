@@ -66,6 +66,8 @@ get '/:token/object/:table' => sub {
 		return status_not_found("token not found");
 	}
 
+	my $base = uri_for('direct/' . params->{token}) . "/object/" . params->{table} . '/';
+
 	my $map = {
 		school => q{
 			SELECT 
@@ -80,7 +82,9 @@ get '/:token/object/:table' => sub {
 		},
 		student => q{
 			SELECT 
-				RefId as id, GivenName as first_name, FamilyName as last_name
+				RefId as id, GivenName as first_name, FamilyName as last_name,
+				Sex as sex, YearLevel as yearlevel, BirthDate as dob,
+				IndigenousStatus as indigenous_status, Email as email
 			FROM 
 				StudentPersonal
 			WHERE 
@@ -91,7 +95,7 @@ get '/:token/object/:table' => sub {
 		},
 		teacher => q{
 			SELECT 
-				RefId as id, GivenName as first_name, FamilyName as last_name
+				RefId as id, GivenName as first_name, FamilyName as last_name, Email as email, Salutation as salutation
 			FROM 
 				StaffPersonal
 			WHERE 
@@ -100,14 +104,16 @@ get '/:token/object/:table' => sub {
 				RefId
 			LIMIT 1000
 		},
-		class => q{
+		class => qq{
 			SELECT 
 				TeachingGroup.RefId as id,
 				TeachingGroup.ShortName as name,
 				TeachingGroup.LongName as title,
 				TeachingGroup.LocalId as localid,
 				TeachingGroup.SchoolYear as year,
-				SchoolInfo.SchoolName as school_title
+				TeachingGroup.KLA as kla,
+				SchoolInfo.SchoolName as school_title,
+				concat('$base', TeachingGroup.RefId) as href
 			FROM 
 				TeachingGroup, SchoolInfo
 			WHERE
@@ -139,6 +145,7 @@ get '/:token/object/class/:id' => sub {
 			TeachingGroup.LongName as title,
 			TeachingGroup.LocalId as localid,
 			TeachingGroup.SchoolYear as year,
+			TeachingGroup.KLA as kla,
 			SchoolInfo.SchoolName as school_title
 		FROM 
 			TeachingGroup, SchoolInfo
@@ -178,7 +185,8 @@ get '/:token/object/class/:id' => sub {
 	$sth = database('SIF')->prepare(q{
 		SELECT 
 			StaffPersonal.RefId as id, 
-			StaffPersonal.GivenName as first_name, StaffPersonal.FamilyName as last_name
+			StaffPersonal.GivenName as first_name, StaffPersonal.FamilyName as last_name,
+			StaffPersonal.Salutation as salutation, StaffPersonal.Email as email
 		FROM 
 			StaffPersonal, TeachingGroup_Teacher
 		WHERE
@@ -191,6 +199,30 @@ get '/:token/object/class/:id' => sub {
 	}
 
 	return $data;
+};
+
+sub client {
+        our $client;
+        # NOTE: Currently alwyas expiring... (inefficient)
+        $client = undef;
+        if (!defined $client) {
+                $client = SIF::REST->new({
+                        endpoint => 'http://rest3api.sifassociation.org/api',
+                        # TODO Make this config, or even allow as input
+                        # solutionId => 'auTestSolution',
+                });
+                $client->setupRest();
+        }
+        return $client;
+}
+
+# XXX get, any post ?
+get qr{/([^/]+)/sifproxy/(.*)} => sub {
+        my ($token, $rest) = splat;
+	return {
+		token => $token,
+		rest => $rest,
+	};
 };
 
 true;

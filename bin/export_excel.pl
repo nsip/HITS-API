@@ -1,19 +1,21 @@
 #!/usr/bin/perl
+use warnings;
+use strict;
 use DBI;
 use YAML;
 use Spreadsheet::WriteExcel;
 use Data::Dumper;
 use HTML::Entities;
 
-my $config = YAML::LoadFile($ENV{HOME} . "/.nsip_sif_data");
+my $config = YAML::LoadFile("/home/scottp/.nsip_sif_data");
 
 print "Content-type: application/vnd.ms-excel\n";
-print "Content-Disposition: attachment; filename=$filename\n";
+print "Content-Disposition: attachment; filename=data.xls\n";
 print "\n";
 
 # Connect to database
 my $dbh = DBI->connect(
-        'dbi:mysqlPP:database=hits;host=sifau.cspvdo7mmaoe.ap-southeast-2.rds.amazonaws.com',
+        'dbi:mysql:database=hits;host=sifau.cspvdo7mmaoe.ap-southeast-2.rds.amazonaws.com',
         $config->{mysql_user}, 
         $config->{mysql_password},
         {RaiseError => 1, AutoCommit => 1}
@@ -21,7 +23,7 @@ my $dbh = DBI->connect(
 
 # Create a new Excel workbook
 my $workbook = Spreadsheet::WriteExcel->new(\*STDOUT);
-$worksheet = $workbook->add_worksheet();
+my $worksheet = $workbook->add_worksheet();
 #open (my $html, "> out.html");
 #print $html qq{<html><body><table border="1">\n};
 
@@ -31,15 +33,18 @@ my $sth = $dbh->prepare(q{
 		field
 	FROM
 		vendor_info
+	ORDER BY
+		field
 });
 $sth->execute();
 my $fields = {};
 my $count = 0;
 $worksheet->write(0, 0, 'vendor_id');
+$worksheet->write(0, 1, 'vendor_name');
 while (my $ref = $sth->fetchrow_hashref) {
 	$count++;
 	$fields->{$ref->{field}} = $count;
-	$worksheet->write(0, $count, $ref->{field});
+	$worksheet->write(0, $count + 1, $ref->{field});
 }
 
 # Vendors
