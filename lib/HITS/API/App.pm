@@ -50,14 +50,14 @@ post '/' => sub {
 				id, vendor_id, name, title, description, 
 				site_url, icon_url, 
 				tags, about, 
-				pub, perm_template
+				perm_template
 			)
 		VALUES
 			(
 				?, ?, ?, ?, ?,
 				?, ?,
 				?, ?,
-				?, ?
+				?
 			)
 	});
 
@@ -90,7 +90,8 @@ post '/' => sub {
 		params->{site_url}, params->{icon_url}, 
 		params->{tags}, params->{about} || params->{about_url},
 		# XXX coulb be public not pub
-		params->{pub}, params->{perm_template}
+		# params->{pub}, 
+		params->{perm_template}
 	);
 
 	database->commit();
@@ -120,7 +121,7 @@ get '/:id' => sub {
 # Update existing
 put '/:id' => sub {
 	my $data = {};
-	foreach my $key (qw/name title description site_url about tags icon pub/) {
+	foreach my $key (qw/name title description site_url about tags icon/) {	# pub
 		if (params->{$key}) {
 			$data->{$key} = params->{$key};
 		}

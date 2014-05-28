@@ -20,7 +20,11 @@ $.fn.hits_vendor_school_app_list = function () {
 					+ '<td>' + v.name + '</td>'
 					+ '<td>' + v.title + '</td>'
 					+ '<td>' + v.school_name + '</td>'
-					+ '<td><a href="' + v.href + '">View</a></td>'
+					+ '<td>'
+						+ '<a href="school-apps-view?school_id=' + v.school_id + '&app_id=' + v.id + '">View</a>'
+						+ '&nbsp;'
+						+ '<a href="' + v.href + '">(json)</a>'
+					+ '</td>'
 					+ '</tr>'
 				);
 			});
