@@ -142,6 +142,7 @@ $.fn.hits_school_app_view = function () {
                 var $this = $(this);
 		hits_api.rest().school.app.read(school_id, app_id)
 		.done(function(data) {
+			console.log(data);
 			// Map any fields
 			$this.find('.field').each(function() {
 				var fieldstr = $(this).attr("dataField");
@@ -173,6 +174,21 @@ $.fn.hits_school_app_view = function () {
 				window.location = url + '?school_id=' + school_id;
 			});
 			
+			$this.find('.testlink').click(function(event) {
+				event.preventDefault();
+				window.location = "/client/Simple/?school_id=" + school_id
+			});
+
+			$this.find('.applink').click(function(event) {
+				event.preventDefault();
+				if (data.app_url) {
+					window.location = data.app_url + data.token;
+				}
+				else {
+					alert("Sorry. This application does not have an applink");
+				}
+				return;
+			});
 		})
 		.fail(function() {
 			alert("Failed");

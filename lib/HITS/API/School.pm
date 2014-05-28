@@ -116,6 +116,7 @@ get '/:id/app' => sub {
 			app.site_url, app.icon_url,
 			app.about, app.tags, app.pub,
 			app.vendor_id, vendor.name vendor_name,
+			app.app_url,
 			concat('$base', app.id) as href
 		FROM
 			school_app, app, vendor
@@ -157,6 +158,7 @@ get '/:id/app/:appId' => sub {
 			app.site_url, app.icon_url,
 			app.about, app.tags, app.pub,
 			app.vendor_id, vendor.name vendor_name,
+			app.app_url,
 			school_app.token,
 			'active' as status
 		FROM
@@ -174,6 +176,7 @@ get '/:id/app/:appId' => sub {
 			app.site_url, app.icon_url,
 			app.about, app.tags, app.pub,
 			app.vendor_id, vendor.name vendor_name,
+			app.app_url,
 			'' as token,
 			'' as status
 		FROM
