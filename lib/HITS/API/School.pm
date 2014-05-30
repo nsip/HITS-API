@@ -158,7 +158,7 @@ get '/:id/app/:appId' => sub {
 			app.site_url, app.icon_url,
 			app.about, app.tags, app.pub,
 			app.vendor_id, vendor.name vendor_name,
-			app.app_url,
+			app.app_url, app.perm_template,
 			school_app.token,
 			'active' as status
 		FROM
@@ -176,7 +176,7 @@ get '/:id/app/:appId' => sub {
 			app.site_url, app.icon_url,
 			app.about, app.tags, app.pub,
 			app.vendor_id, vendor.name vendor_name,
-			app.app_url,
+			app.app_url, app.perm_template,
 			'' as token,
 			'' as status
 		FROM

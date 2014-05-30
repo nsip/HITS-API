@@ -60,7 +60,7 @@ $.fn.hits_app_edit = function () {
 				tags: $form.find('input[name="tags"]').val() + '',
 				perm_template: $form.find('select[name="perm_template"]').val() + '',
 				icon_url: $form.find('input[name="icon_url"]').val() + '',
-				public: $form.find('input[name="public"]').val() + ''
+				// public: $form.find('input[name="public"]').val() + ''
 			};
 
 			if (existing_id) {
@@ -98,7 +98,7 @@ $.fn.hits_app_edit = function () {
 				else {
 					console.log(data);
 					$.each(data.app, function(name, val) {
-						var el = $form.find('input[name="' + name + '"]');
+						var el = $form.find('input[name="' + name + '"],select[name="' + name + '"]');
 						if (el) 
 							el.val(val);
 					});

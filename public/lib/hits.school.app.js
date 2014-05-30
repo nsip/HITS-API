@@ -189,6 +189,16 @@ $.fn.hits_school_app_view = function () {
 				}
 				return;
 			});
+
+			var perm = $this.find('.perm_template');
+			if (perm) {
+				if (data.perm_template) {
+					perm.html('Profile: <a target="_blank" href="profile-' + data.perm_template + '">' + data.perm_template + '</a>');
+				}
+				else {
+					perm.html('');
+				}
+			}
 		})
 		.fail(function() {
 			alert("Failed");

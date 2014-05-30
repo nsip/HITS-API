@@ -26,9 +26,10 @@ set serializer => 'JSON';
 get '/' => sub {
 	my $base = uri_for('/app/'). "";
 	# XXX vendor details ?
+	my $current = vars->{current}{vendor}{id};
 	my $sth = database->prepare(qq{
 		SELECT
-			app.*, vendor.name as vendor_name
+			app.*, vendor.name as vendor_name, '$current' as current
 		FROM
 			app, vendor
 		WHERE
@@ -110,7 +111,7 @@ get '/:id' => sub {
 		FROM
 			app
 		WHERE
-			id = ? AND vendor_id = ?
+			id = ? AND (pub = 'y' || vendor_id = ?)
 	});
 	$sth->execute(params->{id}, vars->{current}{vendor}{id});
 	return {
@@ -121,7 +122,7 @@ get '/:id' => sub {
 # Update existing
 put '/:id' => sub {
 	my $data = {};
-	foreach my $key (qw/name title description site_url about tags icon/) {	# pub
+	foreach my $key (qw/name title description site_url about tags icon_url perm_template/) {	# pub
 		if (params->{$key}) {
 			$data->{$key} = params->{$key};
 		}
