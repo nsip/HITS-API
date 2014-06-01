@@ -179,6 +179,21 @@ $.fn.hits_school_app_view = function () {
 				window.location = "/client/Simple/?school_id=" + school_id
 			});
 
+			$this.find('.studentlink').click(function(event) {
+				event.preventDefault();
+				window.location = data.test.url + '/object/student';
+			});
+
+			$this.find('.stafflink').click(function(event) {
+				event.preventDefault();
+				window.location = data.test.url + '/object/teacher';
+			});
+
+			$this.find('.classeslink').click(function(event) {
+				event.preventDefault();
+				window.location = data.test.url + '/object/class';
+			});
+
 			$this.find('.applink').click(function(event) {
 				event.preventDefault();
 				if (data.app_url) {
@@ -193,10 +208,10 @@ $.fn.hits_school_app_view = function () {
 			var perm = $this.find('.perm_template');
 			if (perm) {
 				if (data.perm_template) {
-					perm.html('Profile: <a target="_blank" href="profile-' + data.perm_template + '">' + data.perm_template + '</a>');
+					perm.html('<a target="_blank" href="profile-' + data.perm_template + '">' + data.perm_template + '</a>');
 				}
 				else {
-					perm.html('');
+					perm.html('(none)');
 				}
 			}
 		})

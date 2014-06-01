@@ -68,7 +68,7 @@ $.fn.hits_app_edit = function () {
 					post_data
 				).done(function(data) {
 					console.log(data);
-					alert("Existing entry udpated");
+					window.location = 'school_scenario_step2';
 				}).fail(function(data) {
 					console.log(data);
 					alert("Failed Update");
@@ -79,7 +79,7 @@ $.fn.hits_app_edit = function () {
 					post_data
 				).done(function(data) {
 					console.log(data);
-					alert("Created, new ID = " + data.id);
+					window.location = 'school_scenario_step2';
 				}).fail(function(data) {
 					console.log(data);
 					alert("Failed");
