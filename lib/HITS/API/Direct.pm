@@ -35,6 +35,22 @@ get '/:token' => sub {
 	if (!$school_app) {
 		return status_not_found("token not found");
 	}
+	# XXX non object type - e.g. SIF direct 
+	my $base = uri_for('direct/' . params->{token}) . "/object";
+	return {
+		sifproxy => {
+			title => 'SIF Proxy access',
+			description => 'SIF 3.x REST automatically authenticated (environment created)',
+		},
+		object => {
+			title => 'OBJECT API',
+			description => 'A very basic JSON representaiton of School,Student,Teacher,Class',
+		},
+		# TODO: Other types e.g. siftest
+	};
+};
+
+get '/:token/object' => {
 	my $base = uri_for('direct/' . params->{token}) . "/object";
 	return {
 		school => {
@@ -59,6 +75,11 @@ get '/:token' => sub {
 		},
 	};
 };
+
+# XXX Move code to separate
+# 	- Separate code will use Applications Database ID schema to determine how
+# 	to do lookup.
+# 	- AND permissions restrictions
 
 get '/:token/object/:table' => sub {
 	my $school_app = getToken(params->{token});
