@@ -26,9 +26,10 @@ set serializer => 'JSON';
 get '/' => sub {
 	my $base = uri_for('/app/'). "";
 	# XXX vendor details ?
+	my $current = vars->{current}{vendor}{id};
 	my $sth = database->prepare(qq{
 		SELECT
-			app.*, vendor.name as vendor_name
+			app.*, vendor.name as vendor_name, '$current' as current
 		FROM
 			app, vendor
 		WHERE
@@ -50,14 +51,14 @@ post '/' => sub {
 				id, vendor_id, name, title, description, 
 				site_url, icon_url, 
 				tags, about, 
-				pub, perm_template
+				perm_template
 			)
 		VALUES
 			(
 				?, ?, ?, ?, ?,
 				?, ?,
 				?, ?,
-				?, ?
+				?
 			)
 	});
 
@@ -90,7 +91,8 @@ post '/' => sub {
 		params->{site_url}, params->{icon_url}, 
 		params->{tags}, params->{about} || params->{about_url},
 		# XXX coulb be public not pub
-		params->{pub}, params->{perm_template}
+		# params->{pub}, 
+		params->{perm_template}
 	);
 
 	database->commit();
@@ -109,7 +111,7 @@ get '/:id' => sub {
 		FROM
 			app
 		WHERE
-			id = ? AND vendor_id = ?
+			id = ? AND (pub = 'y' || vendor_id = ?)
 	});
 	$sth->execute(params->{id}, vars->{current}{vendor}{id});
 	return {
@@ -120,19 +122,22 @@ get '/:id' => sub {
 # Update existing
 put '/:id' => sub {
 	my $data = {};
-	foreach my $key (qw/name title description site_url about tags icon public/) {
+	foreach my $key (qw/name title description site_url about tags icon_url perm_template/) {	# pub
 		if (params->{$key}) {
 			$data->{$key} = params->{$key};
 		}
 	}
 	if (scalar (keys %$data)) {
+		use Data::Dumper;
+		print STDERR Dumper($data);
+		print STDERR join(",", params->{id}, vars->{current}{vendor}{id}) . "\n";
 		my $sth = database->prepare(q{
 			UPDATE app
 			SET } . join(", ", map { "$_ = ?" } sort keys %$data) . q{
 			WHERE id = ? AND vendor_id = ?
 		});
 		$sth->execute(
-			map { $data->{$_} } sort keys %$data,
+			(map { $data->{$_} } sort keys %$data),
 			params->{id}, vars->{current}{vendor}{id}
 		);
 	}

@@ -17,6 +17,14 @@ HITS::API::Security - Authentication methods
 =cut
 
 hook 'before' => sub {
+
+	if (request->path_info =~ /direct/) {
+		header('Access-Control-Allow-Origin' => '*');
+		header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Access-Control-Headers, Access-Control-Allow-Origin");
+		header("Access-Control-Allow-Methods","POST, GET, OPTIONS, DELETE, PUT, HEAD");
+		return;
+	}
+
 	my $user;
 	if (config->{hits}{user} =~ /^COOKIE:(.+)$/) {
 		my $c = $1;
@@ -70,6 +78,7 @@ hook 'before' => sub {
 
 	database->commit();
 	# header('Cache-Control' =>  'no-store, no-cache, must-revalidate')
+	header('Access-Control-Allow-Origin' => '*');
 
 	var current => {
 		login => $login,

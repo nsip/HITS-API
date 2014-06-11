@@ -116,6 +116,7 @@ get '/:id/app' => sub {
 			app.site_url, app.icon_url,
 			app.about, app.tags, app.pub,
 			app.vendor_id, vendor.name vendor_name,
+			app.app_url,
 			concat('$base', app.id) as href
 		FROM
 			school_app, app, vendor
@@ -157,15 +158,18 @@ get '/:id/app/:appId' => sub {
 			app.site_url, app.icon_url,
 			app.about, app.tags, app.pub,
 			app.vendor_id, vendor.name vendor_name,
+			app.app_url, app.perm_template,
 			school_app.token,
-			'active' as status
+			'active' as status,
+			school.name as school_name
 		FROM
-			school_app, app, vendor
+			school_app, app, vendor, school
 		WHERE
 			school_app.school_id = ?
 			AND school_app.app_id = ?
 			AND app.id = school_app.app_id
 			AND vendor.id = app.vendor_id
+			AND school.id = school_app.school_id
 
 		UNION
 
@@ -174,8 +178,10 @@ get '/:id/app/:appId' => sub {
 			app.site_url, app.icon_url,
 			app.about, app.tags, app.pub,
 			app.vendor_id, vendor.name vendor_name,
+			app.app_url, app.perm_template,
 			'' as token,
-			'' as status
+			'' as status,
+			'' as school_name
 		FROM
 			app, vendor
 		WHERE
