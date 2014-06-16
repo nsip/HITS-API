@@ -148,7 +148,8 @@ sub process {
 		my $sa = $class->from_xml(get($loc, $url));
 
 		say "RefId = " . $sa->RefId;
-		say "XML = " . $sa->to_xml_string;
+		say "XML from Class = " . $sa->to_xml_string;
+		say "XML original = " . get($loc, $url);
 
 		say "Validation...";
 		$sa->xml_validate();   
