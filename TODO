@@ -36,3 +36,9 @@ SIF API Port 8080
 JSON-LD
 	:q
 
+
+AUTHENTICATION:
+	- Cookie - trusted id
+	- API Key - Generated API key for direct access
+
+

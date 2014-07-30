@@ -1,3 +1,4 @@
 hits_config = {
-	endpoint: '/api/'
+	// XXX how to configure to /api?
+	endpoint: '/'
 };
