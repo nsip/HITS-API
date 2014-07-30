@@ -174,9 +174,14 @@ $.fn.hits_school_app_view = function () {
 				window.location = url + '?school_id=' + school_id;
 			});
 			
-			$this.find('.testlink').click(function(event) {
+			$this.find('.testlinksif').click(function(event) {
 				event.preventDefault();
 				window.location = "/client/Simple/?school_id=" + school_id
+			});
+
+			$this.find('.testlinkapp').click(function(event) {
+				event.preventDefault();
+				window.location = "http://sampleapp.dev.nsip.edu.au//list/?token=" + data.token;
 			});
 
 			$this.find('.studentlink').click(function(event) {
@@ -194,16 +199,21 @@ $.fn.hits_school_app_view = function () {
 				window.location = data.test.url + '/object/class';
 			});
 
-			$this.find('.applink').click(function(event) {
-				event.preventDefault();
-				if (data.app_url) {
-					window.location = data.app_url + data.token;
-				}
-				else {
-					alert("Sorry. This application does not have an applink");
-				}
-				return;
-			});
+			if (data.app_url) {
+				$this.find('.applink').click(function(event) {
+					event.preventDefault();
+					if (data.app_url) {
+						window.location = data.app_url + data.token;
+					}
+					else {
+						alert("Sorry. This application does not have an applink");
+					}
+					return;
+				});
+			}
+			else {
+				$this.find('.applink').replaceWith('<span>No app URL</span>');
+			}
 
 			var perm = $this.find('.perm_template');
 			if (perm) {
