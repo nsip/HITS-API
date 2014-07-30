@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="favicon.ico">
+
+    <title>NSIP: Vendor Management</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="css/alertify.core.css" rel="stylesheet">
+    <link href="css/alertify.default.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/dashboard.css" rel="stylesheet">
+
+	<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/styles/default.min.css">
+  </head>
+
+<body style="height: 100%;">
+
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+  <div class="container-fluid">
+	<div class="navbar-header">
+	  <div class="logo"><a href="http://www.nsip.edu.au/"><img src="images/logo-small.png"></a></div>
+	  	  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	    <span class="sr-only">Toggle navigation</span>
+	    <span class="icon-bar"></span>
+	    <span class="icon-bar"></span>
+	    <span class="icon-bar"></span>
+	  </button>
+	  <a class="navbar-brand" href="#">NSIP: Developer Dashboard</a>
+	</div>
+	<div class="navbar-collapse collapse">
+	  <ul class="nav navbar-nav navbar-right">
+	    <li><a href="#">Dashboard</a></li>
+	    <li><a href="http://hits.dev.nsip.edu.au/site/user">Settings</a></li>
+	    <li><a href="http://hits.dev.nsip.edu.au/site/">HITS</a></li>
+	    <li><a href="http://hits.dev.nsip.edu.au/site/help-developer-dashboard">Help</a></li>
+	  </ul>
+<!--
+	  <form class="navbar-form navbar-right">
+	    <input type="text" class="form-control" placeholder="Search...">
+	  </form>
+-->
+	</div>
+  </div>
+</div>
+
+
+<div class="container-fluid" style="height: 100%;">
+  <div class="row" style="height: 100%;">
+
+	<div class="col-sm-3 col-md-2 sidebar">
+	  <ul class="nav nav-sidebar">
+	    <li class="hdd-nav active"><a id="hdd-nav-info" href="#hdd-body-info">Information</a></li>
+	    <li class="hdd-nav"><a id="hdd-nav-dashboard" href="#hdd-body-dashboard">Dashboard</a></li>
+	    <li class="hdd-nav"><a id="hdd-nav-client" href="#hdd-body-client">Client</a></li>
+	    <li class="hdd-nav"><a id="hdd-nav-view" href="#hdd-body-view">View</a></li>
+	    <li class="hdd-nav"><a id="hdd-nav-report" href="#hdd-body-report">Report</a></li>
+	  </ul>
+	</div>
+
+
+	<!-- ====================================================================== 
+			INFORMATION
+	-->
+	<div class="hdd-body col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id="hdd-body-info">
+	  <h1 class="page-header">Information</h1>
+
+			<div class="alert alert-danger" id="hdd-info-error">
+				Error - unable to access developer details.
+				<a href="http://hits.dev.nsip.edu.au/site/help-developer-dashboard">Help...</a>
+				<div id="hdd-info-error-details">...</div>
+			</div>
+
+		  <div class="table-responsive">
+			<table class="table table-striped">
+			  <thead>
+			<tr>
+			  <th>Info</th>
+			  <th>Data</th>
+			</tr>
+			  </thead>
+			  <tbody>
+			<tr>
+			  <td>Token</td>
+			  <td>{token}</td>
+			</tr>
+			<tr>
+			  <td>SIF Javascript Client</td>
+			  <td><a href="http://hits.dev.nsip.edu.au/client/Simple/?school_id=0EE41AE6-C43F-11E3-9050-E0F4DBD909AB">HITS SIF Simple Client</a></td>
+			</tr>
+			<tr>
+			  <td>HITS Details</td>
+			  <td><a href="http://hits.dev.nsip.edu.au/site/school-apps-view?school_id=0EE41AE6-C43F-11E3-9050-E0F4DBD909AB&app_id=6d4e8121-2d20-4d40-aab5-1cdc3fa6908b">HITS Details Link</a></td>
+			</tr>
+			  </tbody>
+			</table>
+		  </div>
+
+
+						<table class="hits-applist table table-striped table-bordered table-hover table-condensed">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>Product name</th>
+									<th>Product title</th>
+									<th>Tags</th>
+									<th>Published</th>
+									<th>Actions</th>
+								</tr>
+							</thead>
+							<tbody></tbody>
+						</table>
+
+
+
+			<h2 class="subsequent">Brief instructions</h2>
+			<p>Using the navigation on the left, select the following options:
+			<ul>
+				<li>Information - Tokens, IDs and other getting started information</li>
+				<li>Dashboard - View XML requests to the SIF Server</li>
+				<li>Client - An embedded SIF 3 Client allowing GET and POST requests</li>
+				<li>View - Direct database view - all tables, all rows, useful for debugging</li>
+				<li>Report - View preliminary report matching this Use Case</li>
+			</p>
+
+		</div>
+
+	<!-- ====================================================================== 
+			DASHBOARD
+	-->
+	<div style="display:none" class="hdd-body col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id="hdd-body-dashboard">
+	  <h1 class="page-header">Dashboard</h1>
+
+		<button id="hdd-dashboard-refresh" type="button" class="btn btn-default btn-lg btn-right">
+		  <span class="glyphicon glyphicon-refresh"></span> Refresh
+		</button>
+
+
+	  <h2 class="sub-header">Section title</h2>
+	  <div class="table-responsive">
+	    <table id="hdd-dashboard-data" class="table table-striped">
+	      <thead>
+		<tr>
+		  <th>#</th>
+		  <th>Method</th>
+		  <th>Status</th>
+		  <th>Time</th>
+		  <th>URL</th>
+		</tr>
+	      </thead>
+	      <tbody>
+		<tr>
+		  <td>Click refresh / Loading...</td>
+		</tr>
+	      </tbody>
+	    </table>
+	  </div>
+	</div>
+
+
+	<!-- ====================================================================== 
+			DASHBOARD - View
+	-->
+	<div style="display:none" class="hdd-body col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id="hdd-body-dashboard-view">
+	  <h1 class="page-header">Entry view</h1>
+
+		<button id="hdd-dashboard-back" type="button" class="btn btn-default btn-lg btn-right">
+		  <span class="glyphicon glyphicon-arrow-left"></span> Back
+		</button>
+
+		<h2>Details</h2>
+		<ul class="details half">
+			<li>ID: <span class="field" dataid="id">...</span>
+			<li>instance ID: <span class="field" dataid="instanceId">...</span>
+			<li>Zone: <span class="field" dataid="zone">...</span>
+			<li>Enviornment Token: <span class="field" dataid="enviornmentToken">...</span>
+			<li>Session Token: <span class="field" dataid="sessionToken">...</span>
+		</ul>
+		<ul class="details half">
+			<li>App Key: <span class="field" dataid="appKey">...</span>
+			<li>Context: <span class="field" dataid="context">...</span>
+			<li>User Token: <span class="field" dataid="userToken">...</span>
+			<li>Zone: <span class="field" dataid="zone">...</span>
+			<li>Solution ID: <span class="field" dataid="solutionId">...</span>
+			<li>Client IP: <span class="field" dataid="clientIp">...</span>
+		</ul>
+		
+		<div class="clear"></div>
+
+		<h2 class="subsequent">Request</h2>
+		<ul class="details">
+			<li>URL: <span class="field" dataid="url">...</span>
+			<li>Method: <span class="field" dataid="method">...</span>
+			<li>Query Parameters: <span class="field" dataid="queryParameters">...</span>
+			<li>Request Time: <span class="field" dataid="requestTime">...</span>
+		</ul>
+		
+		<div class="clear"></div>
+		
+		<h3>Request headers</h3>
+		<pre><code class="field" dataid="requestHeaders"></code></pre>
+		<h3>Request body</h3>
+		<pre><code class="field xml" dataid="request"></code></pre>
+
+		<h2 class="subsequent">Response</h2>
+		
+		<ul class="details half">
+			<li>Response Time: <span class="field" dataid="responseTime">...</span>
+		</ul>
+		<ul class="details half">
+			<li>HTTP Status: <span class="field" dataid="httpStatus">...</span>
+		</ul>
+		
+		<div class="clear"></div>
+		
+		<h3>Response headers</h3>
+		<pre><code class="field" dataid="responseHeaders"></code></pre>
+		<h3>Response body</h3>
+		<pre><code class="field xml" dataid="response"></code></pre>
+
+	</div>
+
+
+	<!-- ====================================================================== 
+			CLIENT
+	-->
+	<div style="display:none" class="hdd-body col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id="hdd-body-client">
+	  <h1 class="page-header">Client access</h1>
+		<a href="http://hits.dev.nsip.edu.au/sifdoc/SIFSimple/">View Swagger documentation</a>
+		
+		<iframe style="height: 640px; width: 100%;" src="http://hits.dev.nsip.edu.au/client/Simple/?school_id=0EE41AE6-C43F-11E3-9050-E0F4DBD909AB">
+		</iframe>
+	</div>
+
+	<!-- ====================================================================== 
+			VIEW
+	-->
+	<div style="display:none" class="hdd-body col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id="hdd-body-view">
+	  <h1 class="page-header">View database</h1>
+		<ul id="hdd-body-view-list">
+		</ul>
+	</div>
+
+	<!-- ====================================================================== 
+			VIEW - Table
+	-->
+	<div style="display:none" class="hdd-body col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id="hdd-body-view-table">
+	  <h1 class="page-header">View database</h1>
+		<button id="hdd-view-back" type="button" class="btn btn-default btn-lg btn-right">
+		  <span class="glyphicon glyphicon-arrow-left"></span> Back
+		</button>
+		<h2 id="hbv-tablename">...</h2>
+
+			<div class="table-responsive">
+				<table id="hbv-data" class="table table-striped">
+				<thead>
+					<tr>
+						<th>Loading...</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Loading...</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<!-- ====================================================================== 
+			REPORT
+	-->
+	<div style="display:none" class="hdd-body col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id="hdd-body-report">
+	  <h1 class="page-header">Report</h1>
+		<p>Report coming soon</p>
+	</div>
+
+
+  </div>
+</div>
+
+<script src="lib/jquery.js"></script>
+<script src="lib/jquery.rest.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="lib/purl.js"></script>
+<script src="lib/alertify.js"></script>
+<script src="lib/jquery.tablesorter.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.1/highlight.min.js"></script>
+<script src="hits.devdash.js"></script>
+<script src="lib/hits.api.js"></script>
+<script src="lib/hits.config.js"></script>
+<script src="lib/hits.tag.todo.js"></script>
+<script src="lib/hits.app.edit.js"></script>
+<script src="lib/hits.school.app.js"></script>
+<script src="lib/hits.vendor.info.js"></script>
+<script src="lib/hits.app.list.js"></script>
+<script src="lib/hits.school.list.js"></script>
+<script src="lib/hits.vendor.school.app.js"></script>
+</body>
+</html>
