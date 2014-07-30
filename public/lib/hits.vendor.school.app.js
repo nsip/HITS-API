@@ -14,11 +14,17 @@ $.fn.hits_vendor_school_app_list = function () {
 			$.each( data.app, function(i, v) {
 				$tbody.append(''
 					+ '<tr>'
-					+ '<td>' + v.id + '</td>'
+					// + '<td>' + v.id + '</td>'
+					+ '<td><img src="/api/app/' + v.id + '/icon" /></td>'
+					+ '<td>' + v.vendor_name + '</td>'
 					+ '<td>' + v.name + '</td>'
 					+ '<td>' + v.title + '</td>'
 					+ '<td>' + v.school_name + '</td>'
-					+ '<td><a href="' + v.href + '">View</a></td>'
+					+ '<td>'
+						+ '<a href="school-apps-view?school_id=' + v.school_id + '&app_id=' + v.id + '">View</a>'
+						+ '&nbsp;'
+						+ '<a href="' + v.href + '">(json)</a>'
+					+ '</td>'
 					+ '</tr>'
 				);
 			});

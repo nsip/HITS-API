@@ -116,6 +116,7 @@ get '/:id/app' => sub {
 			app.site_url, app.icon_url,
 			app.about, app.tags, app.pub,
 			app.vendor_id, vendor.name vendor_name,
+			app.app_url,
 			concat('$base', app.id) as href
 		FROM
 			school_app, app, vendor
@@ -138,8 +139,10 @@ post '/:id/app' => sub {
 		VALUES 
 			(?, ?, ?)
 	});
+	my $token = $r->randpattern('ssssssssss');
+	$token =~ s/[^A-Za-z0-9]//g;
 	$sth->execute(
-		params->{id}, params->{app_id}, $r->randpattern('ssssssssss')
+		params->{id}, params->{app_id}, $token
 	);
 	
 	database->commit();
@@ -155,53 +158,78 @@ get '/:id/app/:appId' => sub {
 			app.site_url, app.icon_url,
 			app.about, app.tags, app.pub,
 			app.vendor_id, vendor.name vendor_name,
-			school_app.token
+			app.app_url, app.perm_template,
+			school_app.token,
+			'active' as status,
+			school.name as school_name
 		FROM
-			school_app, app, vendor
+			school_app, app, vendor, school
 		WHERE
 			school_app.school_id = ?
 			AND school_app.app_id = ?
 			AND app.id = school_app.app_id
 			AND vendor.id = app.vendor_id
+			AND school.id = school_app.school_id
+
+		UNION
+
+		SELECT
+			app.id, app.name, app.title, app.description,
+			app.site_url, app.icon_url,
+			app.about, app.tags, app.pub,
+			app.vendor_id, vendor.name vendor_name,
+			app.app_url, app.perm_template,
+			'' as token,
+			'' as status,
+			'' as school_name
+		FROM
+			app, vendor
+		WHERE
+			app.id = ?
+			AND vendor.id = app.vendor_id
+			-- AND app public?
 	});
-	$sth->execute(params->{id}, params->{appId});
+	$sth->execute(params->{id}, params->{appId}, params->{appId});
 	my $data = $sth->fetchrow_hashref;
 	if (!$data) {
 		return status_not_found("school app  doesn't exists");
 	}
 
 	# SIF Authentication
-	$data->{sif} = {
-		url => 'http://hits.dev.nsip.edu.au:8080/SIF3InfraREST/hits/environments/environment',
-		solution_id =>  'HITS',				# Harded coded
-		applicaiton_key => 'HITS',
-		password => 'hits@nsip',
-		user_token => params->{id},			# Mapped to School RefID
-		instance_id => params->{appId},			# MApped to AppID which can be used to find Vendor Id
-		#		xml => qq{<environment xmlns="http://www.sifassociation.org/infrastructure/3.0.1">
-		#	<solutionId>HITS</solutionId>
-		#	<authenticationMethod>Basic</authenticationMethod>
-		#	<instanceId>EDVAL-TT</instanceId>
-		#	<userToken>D3E34B359D75101A8C3D00AA001A1651</userToken>
-		#	<consumerName>Consumer A</consumerName>
-		#	<applicationInfo>
-		#		<applicationKey>HITS</applicationKey>
-		#		<supportedInfrastructureVersion>3.0.1</supportedInfrastructureVersion>
-		#		<dataModelNamespace>http://www.sifassociation.org/au/datamodel/1.3</dataModelNamespace>
-		#		<transport>REST</transport>
-		#		<applicationProduct>
-		#		<vendorName>NSIP</vendorName>
-		#		<productName>HITS Test Harness</productName>
-		#		<productVersion>0.1alpha</productVersion>
-		#		</applicationProduct>
-		#	</applicationInfo>
-		#</environment>},
-	};
+	if ($data->{status} eq 'active') {
+		$data->{sif} = {
+			url => 'http://hits.dev.nsip.edu.au:8080/SIF3InfraREST/hits/environments/environment',
+			solution_id =>  'HITS',				# Harded coded
+			applicaiton_key => 'HITS',
+			password => 'hits@nsip',
+			user_token => params->{id},			# Mapped to School RefID
+			instance_id => params->{appId},			# MApped to AppID which can be used to find Vendor Id
+			#		xml => qq{<environment xmlns="http://www.sifassociation.org/infrastructure/3.0.1">
+			#	<solutionId>HITS</solutionId>
+			#	<authenticationMethod>Basic</authenticationMethod>
+			#	<instanceId>EDVAL-TT</instanceId>
+			#	<userToken>D3E34B359D75101A8C3D00AA001A1651</userToken>
+			#	<consumerName>Consumer A</consumerName>
+			#	<applicationInfo>
+			#		<applicationKey>HITS</applicationKey>
+			#		<supportedInfrastructureVersion>3.0.1</supportedInfrastructureVersion>
+			#		<dataModelNamespace>http://www.sifassociation.org/au/datamodel/1.3</dataModelNamespace>
+			#		<transport>REST</transport>
+			#		<applicationProduct>
+			#		<vendorName>NSIP</vendorName>
+			#		<productName>HITS Test Harness</productName>
+			#		<productVersion>0.1alpha</productVersion>
+			#		</applicationProduct>
+			#	</applicationInfo>
+			#</environment>},
+		};
 
-	# DIRECT Authentication
-	$data->{test} = {
-		url => 'http://hits.dev.nsip.edu.au/api/direct/' . $data->{token},
-	};
+		# DIRECT Authentication
+		$data->{test} = {
+			url => 'http://hits.dev.nsip.edu.au/api/direct/' . $data->{token},
+		};
+	}
+
 
 	return $data;
 };

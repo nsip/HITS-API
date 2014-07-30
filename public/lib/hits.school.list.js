@@ -14,7 +14,8 @@ $.fn.hits_school_list = function () {
 				$.each( data.school, function(i, v) {
 					$tbody.append(''
 						+ '<tr>'
-						+ '<td>' + v.id + '</td>'
+						// + '<td>' + v.id + '</td>'
+						+ '<td>&nbsp;</td>'
 						+ '<td>' + v.name + '</td>'
 						+ '<td><a href="school-apps?school_id=' + v.id + '">Login</a></td>'
 						+ '</tr>'

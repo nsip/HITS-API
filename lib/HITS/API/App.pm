@@ -4,6 +4,9 @@ use Dancer ':syntax';
 use Dancer::Plugin::REST;
 use Dancer::Plugin::Database;
 use HITS::API::Plugin;
+use Dancer::Plugin::Thumbnail;
+use LWP::Simple ();
+use File::Type;
 
 =head1 NAME
 
@@ -23,9 +26,10 @@ set serializer => 'JSON';
 get '/' => sub {
 	my $base = uri_for('/app/'). "";
 	# XXX vendor details ?
+	my $current = vars->{current}{vendor}{id};
 	my $sth = database->prepare(qq{
 		SELECT
-			app.*, vendor.name as vendor_name
+			app.*, vendor.name as vendor_name, '$current' as current
 		FROM
 			app, vendor
 		WHERE
@@ -47,14 +51,14 @@ post '/' => sub {
 				id, vendor_id, name, title, description, 
 				site_url, icon_url, 
 				tags, about, 
-				pub, perm_template
+				perm_template
 			)
 		VALUES
 			(
 				?, ?, ?, ?, ?,
 				?, ?,
 				?, ?,
-				?, ?
+				?
 			)
 	});
 
@@ -85,8 +89,10 @@ post '/' => sub {
 	$sth->execute(
 		$id, vars->{current}{vendor}{id}, params->{name}, params->{title}, params->{description},
 		params->{site_url}, params->{icon_url}, 
-		params->{tags}, params->{about},
-		params->{pub}, params->{perm_template}
+		params->{tags}, params->{about} || params->{about_url},
+		# XXX coulb be public not pub
+		# params->{pub}, 
+		params->{perm_template}
 	);
 
 	database->commit();
@@ -105,7 +111,7 @@ get '/:id' => sub {
 		FROM
 			app
 		WHERE
-			id = ? AND vendor_id = ?
+			id = ? AND (pub = 'y' || vendor_id = ?)
 	});
 	$sth->execute(params->{id}, vars->{current}{vendor}{id});
 	return {
@@ -116,19 +122,22 @@ get '/:id' => sub {
 # Update existing
 put '/:id' => sub {
 	my $data = {};
-	foreach my $key (qw/name title description site_url about tags icon public/) {
+	foreach my $key (qw/name title description site_url about tags icon_url perm_template/) {	# pub
 		if (params->{$key}) {
 			$data->{$key} = params->{$key};
 		}
 	}
 	if (scalar (keys %$data)) {
+		use Data::Dumper;
+		print STDERR Dumper($data);
+		print STDERR join(",", params->{id}, vars->{current}{vendor}{id}) . "\n";
 		my $sth = database->prepare(q{
 			UPDATE app
 			SET } . join(", ", map { "$_ = ?" } sort keys %$data) . q{
 			WHERE id = ? AND vendor_id = ?
 		});
 		$sth->execute(
-			map { $data->{$_} } sort keys %$data,
+			(map { $data->{$_} } sort keys %$data),
 			params->{id}, vars->{current}{vendor}{id}
 		);
 	}
@@ -139,13 +148,59 @@ put '/:id' => sub {
 };
 
 # Delete existing (XXX security?)
-del ':id' => sub {
+del '/:id' => sub {
 	my $sth = database->prepare(q{DELETE FROM app WHERE id = ? AND vendor_id = ?});
 	$sth->execute(params->{id}, vars->{current}{vendor}{id});
 	return {
 		success => 1,
 		id => params->{id},
 	};
+};
+
+get '/:id/icon' => sub {
+	my $sth = database->prepare(qq{
+		SELECT
+			*
+		FROM
+			app
+		WHERE
+			id = ?
+	});
+	$sth->execute(params->{id});
+	my $app = $sth->fetchrow_hashref;
+	status_not_found("app not found") unless ($app);
+
+	# Download URL - when?
+	eval {
+		info("Downloading $app->{icon_url}");
+		my $code = LWP::Simple::getstore($app->{icon_url}, "/tmp/image.$$");
+		info($code);
+		die "No valid file - $code" unless ($code =~ /^2/);
+	};
+	if ($@) {
+		# Resize - cache?
+		info("Loading default logo");
+		resize "/var/lib/hits/icons/default/icon.png" => { w => '80' };
+	}
+	else {
+		# Resize - cache?
+		info("Resizing");
+
+		my $ft = File::Type->new();
+		my $mt = $ft->mime_type("/tmp/image.$$");
+		my $ext = "";
+		if ($mt =~ /png/) {
+			$ext = 'png';
+		}
+		elsif ( ($mt =~ /jpg/) || ($mt =~ /jpeg/) ) {
+			$ext = 'jpg';
+		}
+		elsif ($mt =~ /gif/) {
+			$ext = 'gif';
+		}
+		rename "/tmp/image.$$", "/tmp/image.$$.$ext";
+		resize "/tmp/image.$$.$ext" => { w => '80' };
+	}
 };
 
 # XXX might have to be done VIA School / App 

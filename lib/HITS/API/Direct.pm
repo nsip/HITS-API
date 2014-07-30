@@ -25,15 +25,42 @@ sub getToken {
 	my ($token) = @_;
 	my $sth = database->prepare('SELECT * FROM school_app WHERE token = ?');
 	$sth->execute($token);
-	return $sth->fetchrow_hashref;
+	my $ref = $sth->fetchrow_hashref;
+	info("DEBUG $token checked");
+	return $ref;
 }
 
+#options '/:token' => sub {
+#	my $school_app = getToken(params->{token});
+#	if (!$school_app) {
+#		return status_not_found("token not found");
+#	}
+#	return {};
+#};
+
 # List tables (TODO - remove security from here, only use token)
-get '/:token' => sub {
+# XXX Allow trailing "/"
+any '/:token' => sub {
 	my $school_app = getToken(params->{token});
 	if (!$school_app) {
 		return status_not_found("token not found");
 	}
+	# XXX non object type - e.g. SIF direct 
+	my $base = uri_for('direct/' . params->{token}) . "/object";
+	return {
+		sifproxy => {
+			title => 'SIF Proxy access',
+			description => 'SIF 3.x REST automatically authenticated (environment created)',
+		},
+		object => {
+			title => 'OBJECT API',
+			description => 'A very basic JSON representaiton of School,Student,Teacher,Class',
+		},
+		# TODO: Other types e.g. siftest
+	};
+};
+
+get '/:token/object' => {
 	my $base = uri_for('direct/' . params->{token}) . "/object";
 	return {
 		school => {
@@ -51,36 +78,81 @@ get '/:token' => sub {
 			description => '',
 			href => "$base/teacher",
 		},
+		class => {
+			title => 'Classes',
+			description => '',
+			href => "$base/class",
+		},
 	};
 };
 
-get '/:token/object/:table' => sub {
+# XXX Move code to separate
+# 	- Separate code will use Applications Database ID schema to determine how
+# 	to do lookup.
+# 	- AND permissions restrictions
+
+any '/:token/object/:table' => sub {
 	my $school_app = getToken(params->{token});
 	if (!$school_app) {
 		return status_not_found("token not found");
 	}
 
+	my $base = uri_for('direct/' . params->{token}) . "/object/" . params->{table} . '/';
+
 	my $map = {
 		school => q{
-			SELECT RefId as id, SchoolName as title
-			FROM SchoolInfo
-			WHERE RefId = ?
-			ORDER BY RefId
-			LIMIT 100
+			SELECT 
+				RefId as id, SchoolName as title
+			FROM 
+				SchoolInfo
+			WHERE 
+				RefId = ?
+			ORDER BY 
+				RefId
+			LIMIT 1000
 		},
 		student => q{
-			SELECT RefId as id, GivenName as first_name, FamilyName as last_name
-			FROM StudentPersonal
-			WHERE SchoolInfo_RefId = ?
-			ORDER BY RefId
-			LIMIT 100
+			SELECT 
+				RefId as id, GivenName as first_name, FamilyName as last_name,
+				Sex as sex, YearLevel as yearlevel, BirthDate as dob,
+				IndigenousStatus as indigenous_status, Email as email
+			FROM 
+				StudentPersonal
+			WHERE 
+				SchoolInfo_RefId = ?
+			ORDER BY 
+				RefId
+			LIMIT 1000
 		},
 		teacher => q{
-			SELECT RefId as id, GivenName as first_name, FamilyName as last_name
-			FROM StaffPersonal
-			WHERE SchoolInfo_RefId = ?
-			ORDER BY RefId
-			LIMIT 100
+			SELECT 
+				RefId as id, GivenName as first_name, FamilyName as last_name, Email as email, Salutation as salutation
+			FROM 
+				StaffPersonal
+			WHERE 
+				SchoolInfo_RefId = ?
+			ORDER BY 
+				RefId
+			LIMIT 1000
+		},
+		class => qq{
+			SELECT 
+				TeachingGroup.RefId as id,
+				TeachingGroup.ShortName as name,
+				TeachingGroup.LongName as title,
+				TeachingGroup.LocalId as localid,
+				TeachingGroup.SchoolYear as year,
+				TeachingGroup.KLA as kla,
+				SchoolInfo.SchoolName as school_title,
+				concat('$base', TeachingGroup.RefId) as href
+			FROM 
+				TeachingGroup, SchoolInfo
+			WHERE
+				TeachingGroup.SchoolInfo_RefId = ?
+				AND TeachingGroup.SchoolInfo_RefId = SchoolInfo.RefId
+			ORDER BY 
+				id
+			LIMIT 1000
 		},
 	};
 
@@ -88,6 +160,99 @@ get '/:token/object/:table' => sub {
 	$sth->execute($school_app->{school_id});
 	return {
 		data => $sth->fetchall_arrayref({}),
+	};
+};
+
+any '/:token/object/class/:id' => sub {
+	my $school_app = getToken(params->{token});
+	if (!$school_app) {
+		return status_not_found("token not found");
+	}
+
+	my $sth = database('SIF')->prepare(q{
+		SELECT 
+			TeachingGroup.RefId as id,
+			TeachingGroup.ShortName as name,
+			TeachingGroup.LongName as title,
+			TeachingGroup.LocalId as localid,
+			TeachingGroup.SchoolYear as year,
+			TeachingGroup.KLA as kla,
+			SchoolInfo.SchoolName as school_title
+		FROM 
+			TeachingGroup, SchoolInfo
+		WHERE
+			TeachingGroup.SchoolInfo_RefId = ?
+			AND TeachingGroup.RefId = ?
+			AND TeachingGroup.SchoolInfo_RefId = SchoolInfo.RefId
+		ORDER BY 
+			id
+		LIMIT 1000
+	});
+	$sth->execute($school_app->{school_id}, params->{id});
+	my $data = {
+		info => $sth->fetchrow_hashref,
+		students => [],
+		teachers => [],
+	};
+	return status_not_found("teaching group not found") unless ($data->{info});
+
+	# Students
+	$sth = database('SIF')->prepare(q{
+		SELECT 
+			StudentPersonal.RefId as id, 
+			StudentPersonal.GivenName as first_name, StudentPersonal.FamilyName as last_name
+		FROM 
+			StudentPersonal, TeachingGroup_Student
+		WHERE
+			TeachingGroup_Student.TeachingGroup_RefId = ?
+			AND TeachingGroup_Student.StudentPersonal_RefId = StudentPersonal.RefId
+	});
+	$sth->execute( $data->{info}{id} );
+	while (my $ref = $sth->fetchrow_hashref) {
+		push @{$data->{students}}, { %$ref };
+	}
+
+	# Teachers
+	$sth = database('SIF')->prepare(q{
+		SELECT 
+			StaffPersonal.RefId as id, 
+			StaffPersonal.GivenName as first_name, StaffPersonal.FamilyName as last_name,
+			StaffPersonal.Salutation as salutation, StaffPersonal.Email as email
+		FROM 
+			StaffPersonal, TeachingGroup_Teacher
+		WHERE
+			TeachingGroup_Teacher.TeachingGroup_RefId = ?
+			AND TeachingGroup_Teacher.StaffPersonal_RefId = StaffPersonal.RefId
+	});
+	$sth->execute( $data->{info}{id} );
+	while (my $ref = $sth->fetchrow_hashref) {
+		push @{$data->{teachers}}, { %$ref };
+	}
+
+	return $data;
+};
+
+sub client {
+        our $client;
+        # NOTE: Currently alwyas expiring... (inefficient)
+        $client = undef;
+        if (!defined $client) {
+                $client = SIF::REST->new({
+                        endpoint => 'http://rest3api.sifassociation.org/api',
+                        # TODO Make this config, or even allow as input
+                        # solutionId => 'auTestSolution',
+                });
+                $client->setupRest();
+        }
+        return $client;
+}
+
+# XXX get, any post ?
+any qr{/([^/]+)/sifproxy/(.*)} => sub {
+        my ($token, $rest) = splat;
+	return {
+		token => $token,
+		rest => $rest,
 	};
 };
 

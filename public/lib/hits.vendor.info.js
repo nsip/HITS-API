@@ -9,6 +9,7 @@ $.fn.hits_vendor_info = function () {
 
 		// Find list of fields
 		var fields = [];
+	// XXX input,textare (or)
 		$form.find('input').each(function(index,element) {
 			fields.push(element);
 		});

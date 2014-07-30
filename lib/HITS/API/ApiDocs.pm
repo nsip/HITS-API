@@ -257,6 +257,18 @@ get '/:id' => sub {
 					makeOperation('GET', 'direct/{token}/object/teacher', 'List Teachers'),
 				],
 			},
+			{
+				path => '/direct/{token}/object/class',
+				operations => [
+					makeOperation('GET', 'direct/{token}/object/class', 'List Classes'),
+				],
+			},
+			{
+				path => '/direct/{token}/object/class/{classId}',
+				operations => [
+					makeOperation('GET', 'direct/{token}/object/class/{classId}', 'List Class information'),
+				],
+			},
 		],
 	};
 

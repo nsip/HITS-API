@@ -1,5 +1,43 @@
+TODAY / EDUTECH NEXT WEEK
+
+	* Edit Vendor Name	
+	* Make Verso Public ? Update Verso Icon ? Make Apps Editable
+	
 Move API Docs to "Developer Documentation"
 	* API Docs and SIF Docs under that
+
+
+XXX
+	change direct to token ! (e.g. /api/token/:token/object/class
+
+EduTech Demo Works
+	Security Template
+		- Teacher Only - School info and Teacher personal details
+		- Teacher & Class
+		- Teacher & Class & Students
+		- Teacher & Students
+
+	First release permissions templates
+		- Anonymous
+		- Safe online
+		- Admin +
+
+	WHO ???
+		- Teachers
+		- Students & Teachers
+		- Classes, Students, Teachers
+
+	Installed / Available Apps
+		- Icons / Logos
+		- VIEW = Add/Remove button and Information
+			Could we show actual data?
+
+	School Principal View
+		- Icon
+		- Title of school
+
+	APP
+		- Delete
 
 Add SIS Viewer
 
