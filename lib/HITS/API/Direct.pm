@@ -60,32 +60,32 @@ any '/:token' => sub {
 	};
 };
 
-get '/:token/object' => {
+get '/:token/object' => sub {
 	my $base = uri_for('direct/' . params->{token}) . "/object";
-	return {
-		school => {
-			title => 'Schools',
-			description => '',
-			href => "$base/school",
-		},
-		student => {
-			title => 'Students',
-			description => '',
-			href => "$base/student",
-		},
-		teacher => {
-			title => 'Teachers',
-			description => '',
-			href => "$base/teacher",
-		},
-		class => {
-			title => 'Classes',
-			description => '',
-			href => "$base/class",
-		},
-	};
+ 	return {
+ 		school => {
+ 			title => 'Schools',
+ 			description => '',
+ 			href => "$base/school",
+ 		},
+ 		student => {
+ 			title => 'Students',
+ 			description => '',
+ 			href => "$base/student",
+ 		},
+ 		teacher => {
+ 			title => 'Teachers',
+ 			description => '',
+ 			href => "$base/teacher",
+ 		},
+ 		class => {
+ 			title => 'Classes',
+ 			description => '',
+ 			href => "$base/class",
+ 		},
+ 	};
 };
-
+ 
 # XXX Move code to separate
 # 	- Separate code will use Applications Database ID schema to determine how
 # 	to do lookup.
