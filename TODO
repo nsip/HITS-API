@@ -1,3 +1,14 @@
+MULTIPLE DATABASE
+
+	* Provide list of Apps - with which database it is pointing to
+	* New Vendor Link App to School
+		SELECT an App
+			Top level authentication - e.g. for Timetable with multiple schools?
+		See list of existing Relationships for this App
+		From APP Page - Select a School
+		Create new
+
+
 TODAY / EDUTECH NEXT WEEK
 
 	* Edit Vendor Name	
