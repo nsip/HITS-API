@@ -2,17 +2,18 @@
 	HITS: App Edit
 */
 
-$.fn.hits_app_edit = function () {
-	return this.each(function () {
-		var $this = $(this);
+var hits_app_edit = function(el, existing_id) {
+		// XXX ? el or $(el)
+		var $this = el;
 
-		var existing_id = $.url().param('app_id');
 		console.log(existing_id);
 		if (existing_id) {
+			// XXX Mask ?
 			$this.mask("Loading...");
 		}
 
 		var $form = $this.find('form');
+		// XXX form supported?
 		if (! $form.length) {
 			console.log("Creating form");
 			$this.append('<form></form>');
@@ -109,11 +110,5 @@ $.fn.hits_app_edit = function () {
 				alert("Failed to load app_id");
 			});
 		}
-	});
 };
-
-// CREATE vs UPDATE
-$( document ).ready(function() {
-	$('.hits-appedit').hits_app_edit();
-});
 

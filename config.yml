@@ -71,4 +71,4 @@ plugins:
 hits:
     # REQUEST = request->user, e.g. from Apache
     #user: 'REQUEST'				
-    user: 'scottp'
+    user: 'scooter.penrose'

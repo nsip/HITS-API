@@ -26,27 +26,27 @@ $.fn.hits_app_list = function () {
 					$tbody.append(''
 						+ '<tr>'
 						// + '<td>' + v.id + '</td>'
-						+ '<td><img src="/api/app/' + v.id + '/icon" /></td>'
+						// XXX Images + '<td><img src="/api/app/' + v.id + '/icon" /></td>'
+						+ '<td>' + v.id + '</td>'
 						+ '<td>' + clean(v.name) + '</td>'
 						+ '<td>' + clean(v.title) + '</td>'
 						+ '<td>' + clean(v.tags) + '</td>'
 						+ '<td>' + clean(v.pub) + '</td>'
 						+ '<td>' + clean(v.perm_template) + '</td>'
-						+ '<td><a href="school_scenario_step1?app_id=' + v.id + '">edit</a></td>'
-						// XXX Add edit link - Page name?
+						+ '<td><a class="hits-appedit" href="#' + v.id + '">edit</a></td>'
 						+ '</tr>'
 					);
 				});
 
-				/*
-				// XXX Table Sorter and Table Search ?
 				$this.tablesorter(); 
-				$tbody.find("tr:has(td)").each(function(){
-					var t = $(this).text().toLowerCase();
-					$("<td class='indexColumn'></td>").hide().text(t).appendTo(this);
-				});
-				*/
 
+				// EDIT: Ideally move this out of here
+				$this.find('.hits-appedit').click(function(event) {
+					$('.hdd-body').hide();
+					$('#hdd-body-apps-edit').show();
+					var id = $(this).attr('href').substring(1);
+					hits_app_edit($('#hdd-body-apps-edit'), id);
+				});
 			}
 		})
 		.fail(function(x) { 
