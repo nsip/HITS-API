@@ -69,9 +69,8 @@ TODO Presentation
 	  <ul class="nav nav-sidebar">
 	    <li class="hdd-nav active"><a id="hdd-nav-info" href="#hdd-body-info">Information</a></li>
 	    <li class="hdd-nav"><a id="hdd-nav-apps" href="#hdd-body-apps">Apps</a></li>
-	    <li class="hdd-nav"><a id="hdd-nav-client" href="#hdd-body-client">Client</a></li>
+	    <li class="hdd-nav"><a id="hdd-nav-apps" href="#hdd-body-apps">Apps</a></li>
 	    <li class="hdd-nav"><a id="hdd-nav-view" href="#hdd-body-view">View</a></li>
-	    <li class="hdd-nav"><a id="hdd-nav-report" href="#hdd-body-report">Report</a></li>
 	  </ul>
 	</div>
 
@@ -88,34 +87,8 @@ TODO Presentation
 				<div id="hdd-info-error-details">...</div>
 			</div>
 
-		  <div class="table-responsive">
-			<table class="table table-striped">
-			  <thead>
-			<tr>
-			  <th>Info</th>
-			  <th>Data</th>
-			</tr>
-			  </thead>
-			  <tbody>
-			<tr>
-			  <td>Token</td>
-			  <td>{token}</td>
-			</tr>
-			<tr>
-			  <td>SIF Javascript Client</td>
-			  <td><a href="http://hits.dev.nsip.edu.au/client/Simple/?school_id=0EE41AE6-C43F-11E3-9050-E0F4DBD909AB">HITS SIF Simple Client</a></td>
-			</tr>
-			<tr>
-			  <td>HITS Details</td>
-			  <td><a href="http://hits.dev.nsip.edu.au/site/school-apps-view?school_id=0EE41AE6-C43F-11E3-9050-E0F4DBD909AB&app_id=6d4e8121-2d20-4d40-aab5-1cdc3fa6908b">HITS Details Link</a></td>
-			</tr>
-			  </tbody>
-			</table>
-		  </div>
-
-
 			<h2 class="subsequent">Brief instructions</h2>
-			<p>TODO</p>
+			<p>Use "APP" list on the left to create and manage your available apps.</p>
 
 		</div>
 
@@ -196,7 +169,6 @@ TODO Presentation
 			</form>
 		</div>
 
-
 	</div>
 
 
@@ -204,6 +176,9 @@ TODO Presentation
 			VIEW
 	-->
 	<div style="display:none" class="hdd-body col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id="hdd-body-view">
+			<div class="alert alert-danger" id="hdd-info-error">
+				This is the WRONG database - Coming Soon
+			</div>
 	  <h1 class="page-header">View database</h1>
 		<ul id="hdd-body-view-list">
 		</ul>
