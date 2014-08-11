@@ -2,13 +2,26 @@
 use warnings;
 use strict;
 use DBI;
+use YAML;
 use Data::UUID;
 
 my $app_id = shift || die("Must provide an APP ID to create for");
 
+my $config = YAML::LoadFile($ENV{HOME} . "/.nsip_sif_data");
+
 # DATABASE
-my $dbh_hits = DBI->connect(XXX);
-my $dbh_sif = DBI->connect(XXX);
+my $dbh_hits = DBI->connect(
+	$config->{mysql_dsn_hits}, 
+	$config->{mysql_user}, 
+	$config->{mysql_password},
+	{RaiseError => 1, AutoCommit => 1}
+);
+my $dbh_sif = DBI->connect(
+	$config->{mysql_dsn_sif}, 
+	$config->{mysql_user}, 
+	$config->{mysql_password},
+	{RaiseError => 1, AutoCommit => 1}
+);
 
 # PREPARE - Create the SIS & APP first
 #	sis_vendor_edval - Database name (data created)
@@ -27,7 +40,7 @@ my $app;
 			id = ?
 	});
 	$sth->execute($app_id);
-	$app = $sth->fetchrow_hashreh || die("No valid app for $app_id");
+	$app = $sth->fetchrow_hashref || die("No valid app for $app_id");
 }
 
 # TEST - app_id has a SIS
@@ -41,7 +54,7 @@ my $sis;
 		WHERE
 			id = ?
 	});
-	$sth->execute($app->{sis_id};
+	$sth->execute($app->{sis_id});
 	$sis = $sth->fetchrow_hashref || die("No valid SIS from $app_id " . $app->{sis_id});
 }
 
@@ -51,9 +64,20 @@ if ($sis->{sis_type} ne 'hits_database') {
 }
 
 # DBH - Connect to the SIS Database
-my $dbh_sis = DBI->connect(XXX);
-if (!$dbh_sis) {
-	die "No valid SIS Databse from DB Name = ";
+my $dbh_sis;
+{
+	my $dsn = $config->{mysql_dsn_template};
+	my $db = $sis->{sif_ref};
+	$dsn =~ s/TEMPLATE/$db/;
+	$dbh_sis = DBI->connect(
+		$dsn,
+		$config->{mysql_user}, 
+		$config->{mysql_password},
+		{RaiseError => 1, AutoCommit => 1}
+	);
+	if (!$dbh_sis) {
+		die "No valid SIS Databse from DB Name = ";
+	}
 }
 
 # TEST - SIS database exists and has data (schools)
