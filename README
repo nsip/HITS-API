@@ -1,3 +1,42 @@
+STRUCTURE:
+
+HITS 
+	- This is the main database - the central system in this case.
+
+VENDOR 
+	- A vendor is here to group a set of apps together and give them control.
+
+SIS 
+	- Student Information System
+	- Technically could point to anything
+	- Currently it is just which DATABASE on our server
+	- Think of this as either a SCHOOL or a DISTRICT - the SIS.
+	- Vendor - Optional owner of this SIS - to allow updates/replacing.
+
+PERMISSIONS
+	- Set of permissions (templates, or more specific, can change over time)
+
+APP 
+	- Application that belongs to a vendor
+	- Connected to a SIS
+	- Connected to Permissions
+	- THEREFORE vendor needs to create new APP for Each SIS connected to
+		(this could be tweaked in the future to allow a 1:many relationship, but too hard now)
+
+APP_LOGIN
+	- Provide a login for an app
+	- Login & Password (or what ever fields required) for a SIF login
+	- Which SCHOOLS they can access (we now have support for schools - 1 or more)
+	- NOTE: We do not actually store which schools yet, this may be a mistake though, but this is central and it technically knows nothing about schools.
+
+
+Vendors are easy - they login as a vendor and can manage their apps. There might be rules about which SIS they can link to, or which permissions they can choose, but basically they are single users logging in and managing the apps.
+
+
+Principals - these are a little tricker. Since the principal is really logging in via their SIS. Once they are logged in there (this doesn't actually exist yet) they could now see the APP that are associated with their SIS and grant approvals. This last part will require a few new tables to manage the schools and the groups or other rules based on lists of students.
+
+
+
 NOTES:
 
 	Limited API assumed from a specific Vendor Login.

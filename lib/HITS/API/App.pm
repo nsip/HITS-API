@@ -206,6 +206,7 @@ get '/:id/icon' => sub {
 # XXX might have to be done VIA School / App 
 get '/:id/sif' => sub {
 	# XXX SIF Example data
+	# XXX Update with new data based on information.
 	return {
 		xml => q{
 <environment xmlns="http://www.sifassociation.org/infrastructure/3.0.1">

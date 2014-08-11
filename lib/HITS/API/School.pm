@@ -10,6 +10,8 @@ use String::Random;
 
 HITS::API::School - Manage a school
 
+XXX Deprecated... no longer need school
+
 =cut
 
 our $VERSION = '0.1';

@@ -1,0 +1,48 @@
+SIF Login integration with HITS
+
+
+1. Insert a row into SIF3_APP_TEMPLATE
+        SOLUTION_ID : 'HITS' Needs to match SolutionId from environment xml file.
+        APPLICATION_KEY : The username of the new user.
+        PASSWORD : The password of the new user.
+        USER_TOKEN : The zone Id for this user.
+        INSTANCE_ID : null (I don't think this will be used by us).
+        AUTH_METHOD : Basic
+        ENV_TEMPLATE_ID : 'HITS' defines which environment xml file to use.
+
+2. Insert a row into Zone:
+        id : Auto Increment primary key.
+        zoneId : The USER_TOKEN from above.
+        databaseUrl : The name of the Database to use eg. 'X'
+
+3. Insert one or more rows into Zone_School:
+        zone_id : the id from Zone
+        SchoolInfo_RefId : SchoolInfo_RefId to give access to.
+
+4. Log in :
+        To create the environment :
+        POST to http://hits.dev.nsip.edu.au/SIF3InfraREST/hits/environments/environment
+        Authorization Basic with APPLICATION_KEY:PASSWORD from Step 1 base 64 encoded.
+        Post Body should look like this :
+<environment xmlns="http://www.sifassociation.org/infrastructure/3.0.1">
+  <solutionId>SOLUTION_ID</solutionId>
+  <authenticationMethod>Basic</authenticationMethod>
+  <userToken>USER_TOKEN</userToken>
+  <consumerName>TestConsumer</consumerName>
+  <applicationInfo>
+    <applicationKey>APPLICATION_KEY</applicationKey>
+    <supportedInfrastructureVersion>3.0.1</supportedInfrastructureVersion>
+    <dataModelNamespace>http://www.sifassociation.org/au/datamodel/1.3</dataModelNamespace>
+    <transport>REST</transport>
+    <applicationProduct>
+      <vendorName>NSIP</vendorName>
+      <productName>HITS Test Harness</productName>
+      <productVersion>0.1alpha</productVersion>
+    </applicationProduct>
+  </applicationInfo>
+</environment>
+        Substittute the values for SOLUTION_ID, USER_TOKEN, APPLICATION_KEY from the row in Step 1.
+
+       The response will contain an environment xml file containing a sessionToken to use for simple authentication as well as the endpoint urls and permissions.
+
+5. Simple log in has not changed : sessionToken:PASSWORD base 64 encoded either as authorization basic header or as accessToken url parameter.

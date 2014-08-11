@@ -16,7 +16,15 @@ CREATE TABLE IF NOT EXISTS vendor_info (
 	FOREIGN KEY (vendor_id) REFERENCES vendor(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- SIS - Student Information System
+CREATE TABLE IF NOT EXISTS sis (
+	id VARCHAR(100) UNIQUE,
+	ѕis_type VARCHAR(25),		-- e.g. hits_db
+	sis_ref VARCHAR(200)		-- e.g. X, sis_X
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- APPLICATINOS AND REQUESTED PERMISSIONS
+--	One application per connection
 CREATE TABLE IF NOT EXISTS app (
 	id VARCHAR(36) UNIQUE,
 	vendor_id VARCHAR(36),
@@ -29,7 +37,9 @@ CREATE TABLE IF NOT EXISTS app (
 	icon_url VARCHAR(200),
 	pub VARCHAR(1),
 	perm_template VARCHAR(50),	-- Permissions template...
-	FOREIGN KEY (vendor_id) REFERENCES vendor(id)
+	sis_id VARCHAR(100),		-- Which SIS does this app use
+	FOREIGN KEY (vendor_id) REFERENCES vendor(id),
+	FOREIGN KEY (sis_id) REFERENCES sis(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS app_permissions (
@@ -39,28 +49,28 @@ CREATE TABLE IF NOT EXISTS app_permissions (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
--- SCHOOL ASSIGNMENT
-CREATE TABLE IF NOT EXISTS school (
-	id VARCHAR(36) UNIQUE,
-	name VARCHAR(50)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS school_app (
-	school_id VARCHAR(36),
-	app_id VARCHAR(36),
-	token VARCHAR(100),		-- A token for direct access
-	FOREIGN KEY (school_id) REFERENCES school(id),
-	FOREIGN KEY (app_id) REFERENCES app(id) -- ,
-	-- UNIQUE INDEX 'school_app' (school_id, app_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- CREATE TABLE IF NOT EXISTS token (
--- 	token VARCHAR(100),
--- 	-- expiry	-- Expire a token
--- 	-- restrictions	-- Other restrictions, like IP, applications etc
--- 	what VARCHAR(100),	-- What access, e.g. school_app ?
--- 	
+-- DEPRECATED - Now part of the SIS
+-- CREATE TABLE IF NOT EXISTS school (
+-- 	id VARCHAR(36) UNIQUE,
+-- 	name VARCHAR(50)
 -- ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- SIF / API Identification
+CREATE TABLE IF NOT EXISTS app_login (
+	id VARCHAR(36),			-- ? Local ID for convenience
+	app_id VARCHAR(36),		-- Which app, therefore vendor and SIS
+
+	-- token VARCHAR(100),		-- A token for direct access
+
+	-- DATABASE = hits_sif3_infra
+	app_template_id int(11),	-- Link to hits_sif3_infra.SIF3_APP_TEMPLATE.APP_TEMPLATE_ID
+	-- SIF required data
+	--		SoultionID			-- Use app_template_id above
+	--		ApplicationKey		-- Use app_template_id above
+	--		UserToken			-- Use app_template_id above
+	--		Password			-- Use app_template_id above
+	--		ZoneId				-- User Token from template above
+	--		School Zones		-- Internal
+
+	FOREIGN KEY (app_id) REFERENCES app(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

@@ -9,6 +9,19 @@ MULTIPLE DATABASE
 		Create new
 
 
+	* Data Structure
+
+		vendor = Login to the APP as a Vendor
+		app = Applications, that belong to a Vendor
+
+
+	Application Dashboard
+
+		- Login with ?
+		- How about app_template_id ?
+			OR maybe appKey ?
+
+
 TODAY / EDUTECH NEXT WEEK
 
 	* Edit Vendor Name	
