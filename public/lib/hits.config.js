@@ -1,4 +1,3 @@
 hits_config = {
-	// XXX how to configure to /api?
-	endpoint: '/api/'
+	endpoint: window.location.hostname == 'localhost' ? '/' : '/api/'
 };
