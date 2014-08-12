@@ -1,0 +1,22 @@
+Synergetic
+	synergetci => sif_vendor_synergetic
+	
+TimeChart
+	timechart => sif_vendor_timechart
+
+Sentral
+	sentral => sif_vendor_sentral
+
+Edval
+	edval => sis_vendor_edval
+
+HumanEdge
+	humanedge => sif_vendor_humanedge
+
+Timetabling
+	timetabling => sif_vendor_timetabling
+
+Millennium
+	millennium => sif_vendor_millennium
+
+
