@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS vendor_info (
 -- SIS - Student Information System
 CREATE TABLE IF NOT EXISTS sis (
 	id VARCHAR(100) UNIQUE,
-	ѕis_type VARCHAR(25),		-- e.g. hits_db
+	sis_type VARCHAR(25),		-- e.g. hits_db
 	sis_ref VARCHAR(200)		-- e.g. X, sis_X
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
