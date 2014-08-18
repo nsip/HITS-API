@@ -58,3 +58,16 @@ Timetabling
 Millennium
 	SIS millennium => sif_vendor_millennium
 
+
+SCOTT Test Version
+
+	CREATE
+	 Vendor = B0BC0896-D4DF-11E3-B5CF-802D5982EDD1
+	 APP ID = 622450F8-D4E4-11E3-8810-AD326F9ACA25
+	 Database = sif_vendor_scott
+	 Solution ID = HITS
+	 APP Key = 1c120731-0256-429f-97b2-4986b06b91a4
+	 Password = 73aafa0e-f83b-4a8d-a3cb-4417137bf83f
+	 User Token = 302001c5-505f-45d1-b575-b739096a63d3
+	 Access to all schools in DB
+
