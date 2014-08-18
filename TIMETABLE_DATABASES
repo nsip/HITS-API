@@ -1,22 +1,60 @@
 Synergetic
-	synergetci => sif_vendor_synergetic
+	SIS synergetci => sif_vendor_synergetic
 	
 TimeChart
-	timechart => sif_vendor_timechart
+	Login timechart => b2c90276-85d0-425b-a414-5f6743669a6e
+	SIS timechart => sif_vendor_timechart
+	App ID 4B1152D2-1528-49B3-B9F3-CCAE14BBD2E4
+
+		CREATE
+		 Vendor = b2c90276-85d0-425b-a414-5f6743669a6e
+		 APP ID = 4B1152D2-1528-49B3-B9F3-CCAE14BBD2E4
+		 Database = sif_vendor_timechart
+		 Solution ID = HITS
+		 APP Key = 3d7f23f2-be48-4b78-8254-b785374601cc
+		 Password = 01d02aa4-5e46-4784-bca6-a0f11a87d2e4
+		 User Token = 76db9f03-0ab2-4c9c-b2bf-490775b8ec1e
+		 Access to all schools in DB
 
 Sentral
-	sentral => sif_vendor_sentral
+	Login Sentral => 1993fee9-a0f4-463a-90aa-2a743819ed31
+	SIS sentral => sif_vendor_sentral
+	App ID 214D8172-8444-4A67-8C57-4EC4C580F13F
+
+		CREATE
+		 Vendor = 1993fee9-a0f4-463a-90aa-2a743819ed31
+		 APP ID = 214D8172-8444-4A67-8C57-4EC4C580F13F
+		 Database = sif_vendor_sentral
+		 Solution ID = HITS
+		 APP Key = 029a73b2-a8cf-46d8-81b8-5c8a915a89d7
+		 Password = 62ba2c43-fdd3-4733-a53a-8f0cf447269a
+		 User Token = b231cbc7-e2f9-4f5e-9bb6-7535ccdd1c14
+		 Access to all schools in DB
 
 Edval
-	edval => sis_vendor_edval
+	Login edval => 9cd23a30-2399-412a-b203-b94e551ae69b
+	SIS edval => sis_vendor_edval
+	App ID C4D7118E-EA2D-46A5-AF2B-980AB8B71DFE
+
+		CREATE
+		 Vendor = 9cd23a30-2399-412a-b203-b94e551ae69b
+		 APP ID = C4D7118E-EA2D-46A5-AF2B-980AB8B71DFE
+		 Database = sif_vendor_edval
+		 Solution ID = HITS
+		 APP Key = 1dca6340-4751-4cf2-9d07-b826f2493f67
+		 Password = b8159934-a8df-426b-b56f-6ba0c01a528f
+		 User Token = 76dade97-075e-4def-abf8-16b0e508f6f9
+		 Access to all schools in DB
+
+
+
 
 HumanEdge
-	humanedge => sif_vendor_humanedge
+	SIS humanedge => sif_vendor_humanedge
 
 Timetabling
-	timetabling => sif_vendor_timetabling
+	SIS timetabling => sif_vendor_timetabling
 
 Millennium
-	millennium => sif_vendor_millennium
-
+	SIS millennium => sif_vendor_millennium
 

@@ -97,9 +97,9 @@ my $sif_template;
 	print "GENERATING APP TEMPLATE - $app_key, $password, $user_token = $id\n";
 	$sth = $dbh_sif->prepare(q{
 		INSERT INTO SIF3_APP_TEMPLATE
-			(APP_TEMPLATE_ID, SOLUTION_ID, APPLICATION_KEY, PASSWORD, USER_TOKEN, AUTH_METHOD)
+			(APP_TEMPLATE_ID, SOLUTION_ID, APPLICATION_KEY, PASSWORD, USER_TOKEN, AUTH_METHOD, ENV_TEMPLATE_ID)
 		VALUES
-			(?, 'HITS', ?, ?, ?, 'Basic')
+			(?, 'HITS', ?, ?, ?, 'Basic', 'HITS')
 	});
 	$sth->execute($id, $app_key, $password, $user_token);
 	$sth = $dbh_sif->prepare(q{
