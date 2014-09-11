@@ -117,8 +117,21 @@ Studentnet
 		 Access to all schools in DB
 
 myediary
-	Login 
+	Login my??? = d229c951-c20a-42c1-9b41-42e420242e26
 	SIS myediary => sif_vendor_myediary
+	App ID = C76BF357-C440-4DC2-898D-F08F44F201D4
+
+		CREATE
+		 Vendor = d229c951-c20a-42c1-9b41-42e420242e26
+		 APP ID = C76BF357-C440-4DC2-898D-F08F44F201D4
+		 Database = sif_vendor_myediary
+		 Solution ID = HITS
+		 APP Key = cc991f54-2468-4612-b9ed-f8f7ab66ea5f
+		 Password = ebc5d6bb-59a9-4c3f-8ed7-5a9a6a1aca66
+		 User Token = b6d9a51e-1e6c-45d0-8a1c-a0ec6b4ab4db
+		 Access to all schools in DB
+			
+	
 
 Synergetic
 	Login 
