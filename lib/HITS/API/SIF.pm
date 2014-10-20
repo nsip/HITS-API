@@ -1,14 +1,10 @@
 package HITS::API::SIF;
+package HITS::API::View;
+use perl5i::2;
 use Dancer ':syntax';
-use Dancer::Plugin;
-use Dancer::Plugin::Database;
 use Dancer::Plugin::REST;
-use Params::Check qw[check allow last_error];
-use Data::GUID;
-use Data::Dumper;
-use DBI;
-use YAML;
-use Data::UUID;
+use Dancer::Plugin::Database;
+use HITS::API::Plugin;
 
 our $VERSION = '0.1';
 prefix '/sif';
@@ -32,38 +28,58 @@ get '/' => sub {
 	
 };
 
-post '/{id}' => sub {
+any '/:id' => sub {
+	# --------------------
 	# check if exists, 
-
-	# create DB Entries (from create_entry.pl)
-
-	# create new database in sis entry field
 	
-	# create new Database (from sif-data/bin/timetable.sh
+	my $new = eval {
+		# --------------------
+		# create new database in sis entry field
+		# (note - race condition...)
+		my $sth = database->prepare("SELECT max(id) as id FROM sis WHERE id LIKE 'hits_db_%'");
+		$sth->execute;
+		my $max = $sth->fetchrow_hashref() // {};
+		my $next = 0;
+		if ($max && $max->{id} && ($max->{id} =~ /^hits_db_(\d+)$/)) {
+			$next = $1;
+		}
+		$next++;
 
-	return {
-		success => 1,
-		id => 'XXX',
-		created => 1,	# XXX did we create this time, or already existing
+		$sth = database->prepare("INSERT INTO sis (id, sis_type, sis_ref) VALUES (?, ?, ?)");
+		$sth->execute("hits_db_$next", "hits_database", "hits_db_$next");
+		
+		# --------------------
+		# create new Database (from sif-data/bin/timetable.sh
+		system(config->{hits_create}{command} . " hits_db_$next");
+
+		# --------------------
+		# create DB Entries (from create_entry.pl)
+		create(params->{id});
 	};
+	if ($@) {
+		return {
+			error => $@,
+			success => 0,
+			id => 'XXX',
+			created => 0,	# XXX did we create this time, or already existing
+		};
+	}
+	else {
+		return {
+			data => $new,
+			success => 1,
+			id => 'XXX',
+			created => 1,	# XXX did we create this time, or already existing
+		};
+	}
 };
 
 sub create {
 	my ($app_id) = @_;
 
 	# DATABASE
-	my $dbh_hits = DBI->connect(
-		$config->{mysql_dsn_hits}, 
-		$config->{mysql_user}, 
-		$config->{mysql_password},
-		{RaiseError => 1, AutoCommit => 1}
-	);
-	my $dbh_sif = DBI->connect(
-		$config->{mysql_dsn_sif}, 
-		$config->{mysql_user}, 
-		$config->{mysql_password},
-		{RaiseError => 1, AutoCommit => 1}
-	);
+	my $dbh_hits = database;
+	my $dbh_sif = database('INFRA');
 
 	# PREPARE - Create the SIS & APP first
 	#	sis_vendor_edval - Database name (data created)
@@ -108,13 +124,13 @@ sub create {
 	# DBH - Connect to the SIS Database
 	my $dbh_sis;
 	{
-		my $dsn = $config->{mysql_dsn_template};
+		my $dsn = config->{hits_create}{template};
 		my $db = $sis->{sis_ref};
 		$dsn =~ s/TEMPLATE/$db/;
 		$dbh_sis = DBI->connect(
 			$dsn,
-			$config->{mysql_user}, 
-			$config->{mysql_password},
+			config->{hits_create}{username},
+			config->{hits_create}{password},
 			{RaiseError => 1, AutoCommit => 1}
 		);
 		if (!$dbh_sis) {
@@ -136,7 +152,7 @@ sub create {
 		$sth->execute();
 		my $max = $sth->fetchrow_hashref;
 		my $id = $max->{max} + 1;
-		print "GENERATING APP TEMPLATE - $app_key, $password, $user_token = $id\n";
+		# print "GENERATING APP TEMPLATE - $app_key, $password, $user_token = $id\n";
 		$sth = $dbh_sif->prepare(q{
 			INSERT INTO SIF3_APP_TEMPLATE
 				(APP_TEMPLATE_ID, SOLUTION_ID, APPLICATION_KEY, PASSWORD, USER_TOKEN, AUTH_METHOD, ENV_TEMPLATE_ID)
@@ -189,16 +205,15 @@ sub create {
 		$sth->execute($app_id, $sif_template->{APP_TEMPLATE_ID});
 	}
 
-	print "\n\nCREATE\n";
-	print " Vendor = " . $app->{vendor_id} . "\n";
-	print " APP ID = " . $app->{id} . "\n";
-	print " Database = " . $sis->{sis_ref} . "\n";
-	print " Solution ID = " . $sif_template->{SOLUTION_ID} . "\n";
-	print " APP Key = " . $sif_template->{APPLICATION_KEY} . "\n";
-	print " Password = " . $sif_template->{PASSWORD} . "\n";
-	print " User Token = " . $sif_template->{USER_TOKEN} . "\n";
-	print " Access to all schools in DB\n";
-
+	return {
+		Vendor => $app->{vendor_id},
+		APP_ID => $app->{id},
+		Database => $sis->{sis_ref},
+		Solution_ID => $sif_template->{SOLUTION_ID},
+		APP_Key => $sif_template->{APPLICATION_KEY},
+		Password => $sif_template->{PASSWORD},
+		User_Token => $sif_template->{USER_TOKEN},
+	};
 }
 
 # XXX Plugin

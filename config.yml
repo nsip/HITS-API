@@ -66,9 +66,26 @@ plugins:
                     RaiseError: 1
                     AutoCommit: 1
                 log_queries: 1
+            INFRA:
+                driver: 'mysqlPP'
+                host: 'sifau.cspvdo7mmaoe.ap-southeast-2.rds.amazonaws.com'
+                database: 'hits_sif3_infra'
+                username: 'sifau'
+                password: '03_SIS_was_not'
+                dbi_params:
+                    RaiseError: 1
+                    AutoCommit: 1
+                log_queries: 1
 
 # HITS configuration
 hits:
     # REQUEST = request->user, e.g. from Apache
-    #user: 'REQUEST'				
+    #user: 'REQUEST'
     user: 'scooter.penrose'
+
+hits_create:
+    command: "/home/scottp/nsip/sif-data/bin/timetable.sh"
+    template: "dbi:mysqlPP:database=TEMPLATE;host=sifau.cspvdo7mmaoe.ap-southeast-2.rds.amazonaws.com"
+    username: 'sifau'
+    password: '03_SIS_was_not'
+

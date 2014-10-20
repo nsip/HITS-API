@@ -37,6 +37,17 @@ plugins:
                     RaiseError: 1
                     AutoCommit: 1
                 log_queries: 1
+            INFRA:
+                driver: 'mysql'
+                host: 'sifau.cspvdo7mmaoe.ap-southeast-2.rds.amazonaws.com'
+                database: 'hits_sif3_infra'
+                username: 'sifau'
+                password: '03_SIS_was_not'
+                dbi_params:
+                    RaiseError: 1
+                    AutoCommit: 1
+                log_queries: 1
+
 
 # HITS configuration
 hits:
