@@ -13,13 +13,9 @@ $('.hdd-nav').click(function() {
 	$('.hdd-body').hide();
 	$($(this).find('a').attr('href')).show(); // href contains ID
 });
-$('#hdd-dashboard-back').click(function() {
+$('.hdd-dashboard-back').click(function() {
 	$('.hdd-body').hide();
-	$('#hdd-body-dashboard').show();
-});
-$('#hdd-view-back').click(function() {
-	$('.hdd-body').hide();
-	$('#hdd-body-view').show();
+	$('#hdd-body-apps').show();
 });
 
 // ----------------------------------------------------------------------

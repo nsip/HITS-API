@@ -128,11 +128,58 @@ TODO Presentation
 	<div style="display:none" class="hdd-body col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id="hdd-body-apps-edit">
 	  <h1 class="page-header">Edit Application</h1>
 
-		<button id="hdd-dashboard-back" type="button" class="btn btn-default btn-lg btn-right">
+		<button type="button" class="hdd-dashboard-back btn btn-default btn-lg btn-right">
 		  <span class="glyphicon glyphicon-arrow-left"></span> Back
 		</button>
 
 		<div class="hits-appedit">
+			<form role="form">
+				<div class="form-group"><label for="name">Name: </label> <input class="form-control" id="name" name="name" size="60" type="text" />
+					<div class="help-block">The name of your product (short)</div>
+				</div>
+				<div class="form-group"><label for="title">Title: </label> <input class="form-control" id="title" name="title" size="60" type="text" />
+					<div class="help-block">The full product name that will display in the user&#39;s browser</div>
+				</div>
+				<div class="form-group"><label for="description">Description: </label> <input class="form-control" id="description" name="description" size="60" type="text" />
+					<div class="help-block">A brief description of your product and what it does</div>
+				</div>
+				<div class="form-group"><label for="site-url">Site URL: </label> <input class="form-control" id="site-url" name="site_url" size="60" type="text" />
+					<div class="help-block">The web address of your product or service</div>
+				</div>
+				<div class="form-group"><label for="about-url">About URL: </label> <input class="form-control" id="about-url" name="about_url" size="60" type="text" />
+					<div class="help-block">The web address for information about your products</div>
+				</div>
+				<div class="form-group"><label for="tags">Tags: </label> <input class="form-control" id="tags" name="tags" size="60" type="text" />
+					<div class="help-block">Add any relevant tags for your product here</div>
+				</div>
+				<div class="form-group"><label for="icon-url">Icon URL: </label> <input class="form-control" id="icon-url" name="icon_url" size="60" type="text" />
+					<div class="help-block">A web location to find provide the icon of your product (for instance in a dashboard)</div>
+				</div>
+				<div class="form-group"><label for="profile">Profile: </label> <select class="form-control" id="profile" name="perm_template" size="1" type="text"><option value="">(select)</option><option value="administration-plus">Administration Plus</option><option value="teachers-only">Teachers Only</option><option value="safe-online">Safe Online</option><option value="anonymous">Anonymous</option></select>
+					<div class="help-block">Select a profile: <a href="/site/profile-administration-plus" target="_blank">Administration Plus</a>, <a href="/site/profile-teachers-only" target="_blank">Teachers Only</a>, <a href="/site/profile-safe-online" target="_blank">Safe online</a>, <a href="/site/profile-anonymous" target="_blank">Anonymous</a></div>
+				</div>
+				<!--<div class="form-group"><label for="public">Public: </label> <input class="form-control" id="public" name="public" size="60" type="text" />
+					<div class="help-block">Should this product be public??</div>
+		</div>--></form>
+			<form class="text-right" id="form-submit">
+				<div class="form-group"><button class="btn btn-default" id="form-submit" size="60" type="submit" value="submit">Submit to Register</button>
+				</div>
+			</form>
+		</div>
+
+	</div>
+
+	<!-- ====================================================================== 
+			APPS - View
+	-->
+	<div style="display:none" class="hdd-body col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id="hdd-body-apps-view">
+	  <h1 class="page-header">View Application</h1>
+
+		<button type="button" class="hdd-dashboard-back btn btn-default btn-lg btn-right">
+		  <span class="glyphicon glyphicon-arrow-left"></span> Back
+		</button>
+
+		<div class="hits-appview">
 			<form role="form">
 				<div class="form-group"><label for="name">Name: </label> <input class="form-control" id="name" name="name" size="60" type="text" />
 					<div class="help-block">The name of your product (short)</div>
@@ -187,6 +234,7 @@ TODO Presentation
 <script src="lib/hits.config.js"></script>
 <script src="lib/hits.tag.todo.js"></script>
 <script src="lib/hits.app.edit.js"></script>
+<script src="lib/hits.app.view.js"></script>
 <!-- script src="lib/hits.school.app.js"></script -->
 <script src="lib/hits.vendor.info.js"></script>
 <script src="lib/hits.app.list.js"></script>

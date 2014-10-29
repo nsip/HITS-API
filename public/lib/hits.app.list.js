@@ -33,7 +33,11 @@ $.fn.hits_app_list = function () {
 						+ '<td>' + clean(v.tags) + '</td>'
 						+ '<td>' + clean(v.pub) + '</td>'
 						+ '<td>' + clean(v.perm_template) + '</td>'
-						+ '<td><a class="hits-appedit" href="#' + v.id + '">edit</a></td>'
+						+ '<td>'
+							+ '<a class="hits-appedit" href="#' + v.id + '">edit</a>'
+							+ '&nbsp;'
+							+ '<a class="hits-appview" href="#' + v.id + '">view</a>'
+						+ '</td>'
 						+ '</tr>'
 					);
 				});
@@ -46,6 +50,14 @@ $.fn.hits_app_list = function () {
 					$('#hdd-body-apps-edit').show();
 					var id = $(this).attr('href').substring(1);
 					hits_app_edit($('#hdd-body-apps-edit'), id);
+				});
+
+				// VIEW: Ideally move this out of here
+				$this.find('.hits-appview').click(function(event) {
+					$('.hdd-body').hide();
+					$('#hdd-body-apps-view').show();
+					var id = $(this).attr('href').substring(1);
+					hits_app_view($('#hdd-body-apps-view'), id);
 				});
 			}
 		})

@@ -1,3 +1,8 @@
+URGENT TODO: Self Help
+
+	* Which user - make sure it is using the logged in user, else redirect
+	* Developer Dashboard - Each app needs to link to the developer dashboard automatically (which includes client)
+
 STRUCTURE:
 
 HITS 
