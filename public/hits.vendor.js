@@ -24,6 +24,9 @@ $('#hdd-view-back').click(function() {
 
 // ----------------------------------------------------------------------
 // Table / Database view (XXX move to external resource)
+
+/* Disable Vendor view - no acess to schools without an app
+
 hits_api.rest().view.read().done(function(data) {
 	var ul = $('#hdd-body-view-list');
 	// TODO - Add row counts etc in here
@@ -65,4 +68,6 @@ hits_api.rest().view.read().done(function(data) {
 		});
 	});
 });
+
+*/
 
