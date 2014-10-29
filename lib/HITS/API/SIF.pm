@@ -32,25 +32,36 @@ any '/:id' => sub {
 	# --------------------
 	# check if exists, 
 	
+	# --------------------
+	# CREATE
+	my $dbmsg;
 	my $new = eval {
 		# --------------------
 		# create new database in sis entry field
 		# (note - race condition...)
-		my $sth = database->prepare("SELECT max(id) as id FROM sis WHERE id LIKE 'hits_db_%'");
+		my $sth = database->prepare("SELECT id FROM sis WHERE id LIKE 'hits_db_%'");
 		$sth->execute;
-		my $max = $sth->fetchrow_hashref() // {};
 		my $next = 0;
-		if ($max && $max->{id} && ($max->{id} =~ /^hits_db_(\d+)$/)) {
-			$next = $1;
+		while (my $ref = $sth->fetchrow_hashref()) {
+			if ($ref->{id} =~ /^hits_db_(\d+)$/) {
+				if ($1 > $next) { $next = $1 }
+			}
 		}
 		$next++;
 
 		$sth = database->prepare("INSERT INTO sis (id, sis_type, sis_ref) VALUES (?, ?, ?)");
 		$sth->execute("hits_db_$next", "hits_database", "hits_db_$next");
+		$sth = database->prepare("UPDATE app SET sis_id = ? WHERE id = ?");
+		$sth->execute("hits_db_$next", params->{id});
 		
 		# --------------------
 		# create new Database (from sif-data/bin/timetable.sh
-		system(config->{hits_create}{command} . " hits_db_$next");
+		$ENV{HOME} = "/home/scottp";
+		open (my $RUN, config->{hits_create}{command} . " hits_db_$next 2>&1 |");
+		while(<$RUN>) {
+			$dbmsg .= $_;
+		}
+		# die "CMD = " . config->{hits_create}{command} . " hits_db_$next 2>&1; EXIT = $?; Message = $runbuf";
 
 		# --------------------
 		# create DB Entries (from create_entry.pl)
@@ -62,6 +73,7 @@ any '/:id' => sub {
 			success => 0,
 			id => 'XXX',
 			created => 0,	# XXX did we create this time, or already existing
+			database => $dbmsg,
 		};
 	}
 	else {
@@ -70,6 +82,7 @@ any '/:id' => sub {
 			success => 1,
 			id => 'XXX',
 			created => 1,	# XXX did we create this time, or already existing
+			database => $dbmsg,
 		};
 	}
 };
