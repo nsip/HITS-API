@@ -37,9 +37,12 @@ get '/' => sub {
 			AND vendor.id = app.vendor_id
 	});
 	$sth->execute(vars->{current}{vendor}{id});
-	return {
+	my $ret = {
 		app => $sth->fetchall_arrayref({}),
 	};
+	# Token
+	$ret->{token} = 'XXX';
+	return $ret;
 };
 
 # Create new APP (brand new, not associate an app with a school)

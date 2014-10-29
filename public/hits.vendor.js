@@ -17,53 +17,21 @@ $('.hdd-dashboard-back').click(function() {
 	$('.hdd-body').hide();
 	$('#hdd-body-apps').show();
 });
-
-// ----------------------------------------------------------------------
-// Table / Database view (XXX move to external resource)
-
-/* Disable Vendor view - no acess to schools without an app
-
-hits_api.rest().view.read().done(function(data) {
-	var ul = $('#hdd-body-view-list');
-	// TODO - Add row counts etc in here
-	$.each(data.table, function(key, val) {
-		ul.append('<li><a class="table-view" href="#' + key + '">' + key + '</a></li>');
-	});
-
-	$('.table-view').click(function() {
-		var table = $(this).attr('href').substring(1);
-		hits_api.rest().view.read(table).done(function(data) {
-			$('.hdd-body').hide();
-			$('#hdd-body-view-table').show();
-
-			$('#hbv-tablename').html(table);
-			var tbl = $('#hbv-data');
-			var head = tbl.find('thead tr');
-			var body = tbl.find('tbody');
-			head.empty();
-			body.empty();
-
-			var fields = [];
-			$.each(data.data[0], function(key, val) {
-				fields.push(key);
-			});
-			// fields.sort();
-			$.each(fields, function(x, k) {
-				head.append('<th>' + k + '</th>');
-			});
-
-			$.each(data.data, function(i, d) {
-				body.append('<tr></tr>');
-				var tr = body.find('tr').last();
-				$.each(fields, function(x, k) {
-					tr.append('<td>' + d[k] + '</td>');
-				});
-			});
-
-			tbl.tablesorter(); 
-		});
+$('#hdd-button-create').click(function() {
+	$('.hdd-body').hide();
+	$('#hdd-body-create').show();
+	var $this = $('#create-results');
+	$this.html("Loading...");
+	$this.mask("Loading...");
+	hits_api.rest().sif.read($.url().attr('fragment'))
+	.done(function(data) {
+		$this.unmask();
+		if (data.success) {
+			$this.html("<h1>Success</h1><p>" + data.note + "</p>");
+		}
+		else {
+			$this.html("<h1>ERROR</h1><p>" + data.error + "</p><p>" + data.database + "</p>");
+		}
 	});
 });
-
-*/
 

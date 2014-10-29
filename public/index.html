@@ -174,20 +174,17 @@ TODO Presentation
 	-->
 	<div style="display:none" class="hdd-body col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id="hdd-body-apps-view">
 	  <h1 class="page-header">View Application</h1>
+		<br />
+
+               <button id="hdd-button-create" type="button" class="btn btn-default btn-lg btn-left">
+                 <span class="glyphicon glyphicon-pencil"></span> Create Database
+               </button>
 
 		<button type="button" class="hdd-dashboard-back btn btn-default btn-lg btn-right">
 		  <span class="glyphicon glyphicon-arrow-left"></span> Back
 		</button>
 
 		<div class="hits-appview">
-
-			<button type="button" class="hdd-dashboard-back btn btn-default btn-lg btn-right">
-			  <span class="glyphicon glyphicon-arrow-left"></span> Back
-			</button>
-
-			<button type="button" class="hdd-dashboard-back btn btn-default btn-lg btn-right">
-			  <span class="glyphicon glyphicon-arrow-left"></span> Back
-			</button>
 
 				<div class="form-group"><label for="name">Name: </label> <span class="form-control" id="name" field="name" size="60" type="text" />
 					<div class="help-block">The name of your product (short)</div>
@@ -217,6 +214,24 @@ TODO Presentation
 
 	</div>
 
+	<!-- ====================================================================== 
+			APPS - Create
+	-->
+	<div style="display:none" class="hdd-body col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" id="hdd-body-create">
+	  <h1 class="page-header">Create Databse</h1>
+		<button type="button" class="hdd-dashboard-back btn btn-default btn-lg btn-right">
+		  <span class="glyphicon glyphicon-arrow-left"></span> Back
+		</button>
+
+		<pre id="create-results">
+			Loading...
+		</pre>
+
+	</div>
+
+	<!-- ====================================================================== 
+		END
+	-->
 
 
   </div>

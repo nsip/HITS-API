@@ -31,7 +31,27 @@ get '/' => sub {
 any '/:id' => sub {
 	# --------------------
 	# check if exists, 
-	
+	my $es = database->prepare('SELECT * FROM app_login WHERE app_id = ?');
+	$es->execute(params->{id});
+	my $exist = $es->fetchrow_hashref();
+	if ($exist && $exist->{app_id} && $exist->{app_template_id}) {
+		return {
+			data => {
+				#Vendor => $app->{vendor_id},
+				#APP_ID => $app->{id},
+				#Database => $sis->{sis_ref},
+				#Solution_ID => $sif_template->{SOLUTION_ID},
+				#APP_Key => $sif_template->{APPLICATION_KEY},
+				#Password => $sif_template->{PASSWORD},
+				#User_Token => $sif_template->{USER_TOKEN},
+			},
+			success => 1,
+			created => 0,
+			note => 'Already exists',
+			database => 'NA',
+		};
+	}
+
 	# --------------------
 	# CREATE
 	my $dbmsg;
@@ -72,7 +92,8 @@ any '/:id' => sub {
 			error => $@,
 			success => 0,
 			id => 'XXX',
-			created => 0,	# XXX did we create this time, or already existing
+			created => 0,
+			note => 'Error, see error and database',
 			database => $dbmsg,
 		};
 	}
@@ -82,6 +103,7 @@ any '/:id' => sub {
 			success => 1,
 			id => 'XXX',
 			created => 1,	# XXX did we create this time, or already existing
+			note => 'Success, created new DB',
 			database => $dbmsg,
 		};
 	}

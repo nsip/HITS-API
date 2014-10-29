@@ -45,6 +45,7 @@ hits_api = {
 			hits_api.api.vendor.add('info');
 			hits_api.api.vendor.add('app');
 			hits_api.api.app.add('action');
+			hits_api.api.add('sif');
 			// hits_api.api.add('view');
 		}
 		return hits_api.api;
